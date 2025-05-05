@@ -1,6 +1,6 @@
-const CustomError = require("../utils/customError");
+const { default: status } = require("http-status");
 const { pool } = require("../database/sqlConnection");
-const { BAD_REQUEST, CONFLICT } = require("../constants/statusCodes");
+const { CustomError } = require("../lib/utils");
 
 const sqlQuery = async (query, params) => {
   let dbconn;
@@ -12,16 +12,16 @@ const sqlQuery = async (query, params) => {
     if (error) {
       switch (error.code) {
         case "ER_TABLE_EXISTS_ERROR":
-          throw new CustomError(error.message, BAD_REQUEST, error);
+          throw new CustomError(error.message, status.BAD_REQUEST, error);
 
         case "ER_DUP_ENTRY":
-          throw new CustomError(error.message, CONFLICT, error);
+          throw new CustomError(error.message, status.CONFLICT, error);
 
         case "ECONNREFUSED":
           throw new Error("Database connection error.");
 
         default:
-          throw new CustomError(error.message, CONFLICT, error);
+          throw new CustomError(error.message, status.CONFLICT, error);
       }
     }
   } finally {

@@ -1,18 +1,40 @@
 import { Route, Routes } from "react-router-dom";
 import LandingPage from "./pages/landing-page";
-import LoginPage from "./pages/authentication/login";
-import SignupPage from "./pages/authentication/signup";
 import TeachersPage from "./pages/teacher/page";
+import { useMainStore } from "./states/store";
+import { useQuery } from "@tanstack/react-query";
+import { coleAPI } from "./lib/utils";
+import LoginPage from "./components/authentication/login";
+import { useEffect } from "react";
 
 const App = () => {
+  const user = useMainStore((state) => state.user);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["user"],
+    queryFn: coleAPI("/users/user/me"),
+  });
+
+  useEffect(() => {
+    if (data) {
+      console.log(data);
+    }
+  }, [data]);
+
+  if (isLoading) {
+    return <div>loading...</div>;
+  }
+
   return (
     <>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/teacher" element={<TeachersPage />} />
-      </Routes>
+      {user ? (
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/teacher" element={<TeachersPage />} />
+        </Routes>
+      ) : (
+        <LandingPage />
+      )}
     </>
   );
 };

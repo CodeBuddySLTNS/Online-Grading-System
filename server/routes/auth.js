@@ -3,7 +3,7 @@ const handler = require("../handlers/auth");
 
 const router = require("express").Router();
 
-router.get("/login", tryCatch(handler.login));
-router.post("/login", tryCatch(handler.signup));
+router.post("/login", tryCatch(handler.login));
+router.post("/signup", tryCatch(handler.signup));
 
 module.exports = router;

@@ -8,8 +8,16 @@ import { Eye, EyeOff } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Joi from "joi";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { coleAPI } from "@/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { toast } from "sonner";
 
 const schema = Joi.object({
   firstName: Joi.string().required().label("First Name"),
@@ -21,16 +29,46 @@ const schema = Joi.object({
   password: Joi.string().min(6).required().label("Password"),
 });
 
-export default function SignupPage() {
+export default function SignupPage({ setAuth }) {
   const [showPassword, setShowPassword] = useState(false);
 
-  const { mutateAsync: signup } = useMutation({
+  const { data: departments } = useQuery({
+    queryKey: ["departments"],
+    queryFn: coleAPI("/departments"),
+  });
+
+  const { mutateAsync: signup, isPending } = useMutation({
     mutationFn: coleAPI("/auth/signup", "POST"),
+    onSuccess: (data) => {
+      console.log(data);
+      localStorage.setItem("token", data.token);
+    },
+    onError: (e) => {
+      if (e.response?.data?.message) {
+        toast("Error!", {
+          description: e.response?.data?.message,
+          style: {
+            backgroundColor: "#f8d7da",
+            color: "#721c24",
+          },
+        });
+      } else {
+        toast("Error!", {
+          description: "Unable to connect to the server.",
+          style: {
+            fontSize: "1rem",
+            backgroundColor: "#f8d7da",
+            color: "#721c24",
+          },
+        });
+      }
+    },
   });
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: joiResolver(schema),
@@ -100,12 +138,23 @@ export default function SignupPage() {
             <div className="grid grid-cols-2 gap-2">
               <div className="flex flex-col gap-1">
                 <Label htmlFor="department">Department</Label>
-                <Input
-                  id="department"
-                  type="text"
-                  placeholder="Department"
-                  {...register("department")}
-                />
+                <Select
+                  onValueChange={(value) => setValue("department", value)}
+                >
+                  <SelectTrigger id="department" className="w-full">
+                    <SelectValue placeholder="Select Department" />
+                  </SelectTrigger>
+                  <SelectContent className="w-full">
+                    {departments?.map((dept) => (
+                      <SelectItem
+                        key={dept.departmentId}
+                        value={dept.departmentName}
+                      >
+                        {dept.departmentName} ({dept.shortName})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 {errors.department && (
                   <p className="text-red-500 text-sm">
                     {errors.department.message}
@@ -165,16 +214,19 @@ export default function SignupPage() {
               )}
             </div>
 
-            <Button type="submit" className="w-full mt-2">
-              Sign Up
+            <Button type="submit" className="w-full mt-2" asChild>
+              <button disabled={isPending}>Sign up</button>
             </Button>
           </form>
 
           <p className="text-sm text-center text-gray-500 mt-4">
             Already have an account?{" "}
-            <Link to="/login" className="text-blue-600 underline">
+            <span
+              onClick={() => setAuth("login")}
+              className="text-blue-600 underline cursor-pointer"
+            >
               Login
-            </Link>
+            </span>
           </p>
         </CardContent>
       </Card>
