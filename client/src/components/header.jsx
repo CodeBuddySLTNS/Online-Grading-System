@@ -1,8 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Menu } from "lucide-react";
+import { useMainStore } from "@/states/store";
 
 export function Header() {
+  const handleLogout = () => {
+    useMainStore.getState().setUser({});
+    useMainStore.getState().setIsLoggedIn(false);
+    useMainStore.getState().setIsLoading(true);
+    localStorage.removeItem("token");
+    setTimeout(() => {
+      useMainStore.getState().setIsLoading(false);
+    }, 1000);
+  };
+
   return (
     <header className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 border-b">
       <div className="flex items-center gap-2">
@@ -12,7 +22,7 @@ export function Header() {
         <Button variant="ghost" size="sm">
           Dashboard
         </Button>
-        <Button variant="ghost" size="sm">
+        <Button variant="ghost" size="sm" onClick={handleLogout}>
           Logout
         </Button>
         <Avatar className="w-8 h-8">

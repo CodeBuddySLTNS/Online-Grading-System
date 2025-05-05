@@ -7,7 +7,6 @@ export default function TeachersPage() {
     <div className="">
       <Header />
       <DepartmentsPage />
-      <DepartmentWithYears />
     </div>
   );
 }

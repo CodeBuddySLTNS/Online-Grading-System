@@ -46,18 +46,18 @@ const login = async (req, res) => {
     });
   }
 
-  const token = generateToken({ userId: user.id });
-
-  console.log(user);
+  const token = generateToken({ userId: user.userId });
 
   res.json({
     message: "Login successful.",
     user: {
-      id: user.id,
+      id: user.userId,
       username: user.username,
       firstName: user.firstName,
       lastName: user.lastName,
-      department: user.department,
+      departmentName: user.departmentName,
+      departmentShortName: user.shortName,
+      yearLevel: user.yearLevel,
       role: user.role,
     },
     token,

@@ -1,41 +1,59 @@
-import { Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LandingPage from "./pages/landing-page";
 import TeachersPage from "./pages/teacher/page";
-import { useMainStore } from "./states/store";
 import { useQuery } from "@tanstack/react-query";
 import { coleAPI } from "./lib/utils";
-import LoginPage from "./components/authentication/login";
+import LoginPage from "./pages/authentication/login";
 import { useEffect } from "react";
+import { useMainStore } from "./states/store";
+import LoggedIn from "./pages/logged-in";
 
 const App = () => {
-  const user = useMainStore((state) => state.user);
+  const isLoggedIn = useMainStore((state) => state.isLoggedIn);
+  const isLoading = useMainStore((state) => state.isLoading);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading: loading } = useQuery({
     queryKey: ["user"],
     queryFn: coleAPI("/users/user/me"),
   });
 
   useEffect(() => {
+    if (!loading) {
+      setTimeout(() => {
+        useMainStore.getState().setIsLoading(false);
+      }, 800);
+    }
+  }, [loading]);
+
+  useEffect(() => {
     if (data) {
       console.log(data);
+      useMainStore.getState().setUser(data.user);
+      useMainStore.getState().setIsLoggedIn(true);
     }
   }, [data]);
 
   if (isLoading) {
-    return <div>loading...</div>;
+    return (
+      <div className="w-full h-[100vh] flex items-center justify-center">
+        <div className="loader"></div>
+      </div>
+    );
   }
 
   return (
-    <>
-      {user ? (
-        <Routes>
-          <Route path="/" element={<LoginPage />} />
-          <Route path="/teacher" element={<TeachersPage />} />
-        </Routes>
+    <div>
+      {isLoggedIn ? (
+        <Router>
+          <Routes>
+            <Route path="/" element={<LoggedIn />} />
+            <Route path="/teacher" element={<TeachersPage />} />
+          </Routes>
+        </Router>
       ) : (
         <LandingPage />
       )}
-    </>
+    </div>
   );
 };
 

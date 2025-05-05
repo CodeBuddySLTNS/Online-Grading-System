@@ -7,9 +7,8 @@ const users = async (req, res) => {
 
 const userInfo = async (req, res) => {
   const userId = res.locals.userId;
-  console.log(userId);
-  const users = await User.getUserById(userId);
-  res.send(users);
+  const user = await User.getUserById(userId);
+  res.send(user);
 };
 
 module.exports = { users, userInfo };

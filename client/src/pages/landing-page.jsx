@@ -1,9 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
 import { useState } from "react";
-import LoginPage from "@/components/authentication/login";
-import SignupPage from "@/components/authentication/signup";
+import LoginPage from "@/pages/authentication/login";
+import SignupPage from "@/pages/authentication/signup";
 
 export default function LandingPage() {
   const [auth, setAuth] = useState("");
@@ -31,11 +30,10 @@ export default function LandingPage() {
                 <Button className="w-full" variant="default" asChild>
                   <button onClick={() => setAuth("login")}>Login</button>
                 </Button>
-                <Link to="/signup">
-                  <Button className="w-full" variant="secondary" asChild>
-                    <button onClick={() => setAuth("signup")}>Signup</button>
-                  </Button>
-                </Link>
+
+                <Button className="w-full" variant="secondary" asChild>
+                  <button onClick={() => setAuth("signup")}>Signup</button>
+                </Button>
               </div>
             </CardContent>
           </Card>
