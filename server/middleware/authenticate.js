@@ -5,9 +5,10 @@ const authenticate = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
     const secretKey = process.env.SYSTEM_SECRET_KEY;
+    const whiteList = ["/auth/login", "/auth/signup", "/departments"];
 
     // Allow login and signup without token
-    if (req.url === "/auth/login" || req.url === "/auth/signup") {
+    if (whiteList.includes(req.url)) {
       return next();
     }
 

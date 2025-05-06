@@ -5,4 +5,9 @@ const departments = async (req, res) => {
   res.send(departments);
 };
 
+const departmentsByTeacher = async (req, res) => {
+  const departments = await Department.getAll();
+  res.send(departments);
+};
+
 module.exports = { departments };

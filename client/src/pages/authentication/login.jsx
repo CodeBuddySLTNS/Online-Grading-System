@@ -8,7 +8,6 @@ import Joi from "joi";
 import { useMutation } from "@tanstack/react-query";
 import { coleAPI } from "@/lib/utils";
 import { toast } from "sonner";
-import { useEffect } from "react";
 import { useMainStore } from "@/states/store";
 
 const loginSchema = Joi.object({
@@ -17,9 +16,17 @@ const loginSchema = Joi.object({
 });
 
 export default function LoginPage({ setAuth }) {
-  const { mutateAsync: login, data } = useMutation({
+  const { mutateAsync: login } = useMutation({
     mutationFn: coleAPI("/auth/login", "POST"),
-
+    onSuccess: (data) => {
+      localStorage.setItem("token", data.token);
+      useMainStore.getState().setUser(data.user);
+      useMainStore.getState().setIsLoggedIn(true);
+      useMainStore.getState().setIsLoading(true);
+      setTimeout(() => {
+        useMainStore.getState().setIsLoading(false);
+      }, 800);
+    },
     onError: (e) => {
       if (e.response?.data?.message) {
         toast("Error!", {
@@ -58,13 +65,6 @@ export default function LoginPage({ setAuth }) {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    if (data) {
-      localStorage.setItem("token", data.token);
-      useMainStore.getState().setUser(data.user);
-    }
-  }, [data]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-white to-slate-100 px-4">

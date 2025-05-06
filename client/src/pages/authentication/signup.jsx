@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { useMainStore } from "@/states/store";
 
 const schema = Joi.object({
   firstName: Joi.string().required().label("First Name"),
@@ -26,7 +27,7 @@ const schema = Joi.object({
   department: Joi.string().required().label("Department"),
   year: Joi.number().min(1).max(4).required().label("Year"),
   username: Joi.string().required().label("Username"),
-  password: Joi.string().min(6).required().label("Password"),
+  password: Joi.string().min(3).required().label("Password"),
 });
 
 export default function SignupPage({ setAuth }) {
@@ -42,6 +43,12 @@ export default function SignupPage({ setAuth }) {
     onSuccess: (data) => {
       console.log(data);
       localStorage.setItem("token", data.token);
+      useMainStore.getState().setUser(data.user);
+      useMainStore.getState().setIsLoggedIn(true);
+      useMainStore.getState().setIsLoading(true);
+      setTimeout(() => {
+        useMainStore.getState().setIsLoading(false);
+      }, 800);
     },
     onError: (e) => {
       if (e.response?.data?.message) {

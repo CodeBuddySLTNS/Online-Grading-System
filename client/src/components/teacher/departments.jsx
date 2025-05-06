@@ -11,7 +11,10 @@ export default function DepartmentsPage() {
   return (
     <div>
       <div className="p-8 md:px-20">
-        <h1 className="text-3xl font-bold mb-6">Departments You Handle</h1>
+        <div className="flex justify-between flex-wrap">
+          <h1 className="text-2xl font-bold mb-6">Departments You Handle</h1>
+          <Button variant="secondary">Handle New Department</Button>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {departments.map((dept) => (
             <Card key={dept.id} className="rounded-2xl shadow-md">

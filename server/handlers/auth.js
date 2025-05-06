@@ -11,7 +11,7 @@ const signupSchema = Joi.object({
   department: Joi.string().required().label("Department"),
   year: Joi.number().min(1).max(4).required().label("Year"),
   username: Joi.string().required().label("Username"),
-  password: Joi.string().min(6).required().label("Password"),
+  password: Joi.string().min(3).required().label("Password"),
   role: Joi.string().optional().allow("").label("Role"),
 });
 

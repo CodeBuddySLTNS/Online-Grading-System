@@ -26,7 +26,7 @@ export function Header() {
           Logout
         </Button>
         <Avatar className="w-8 h-8">
-          <AvatarFallback>TS</AvatarFallback>
+          <AvatarFallback>U</AvatarFallback>
         </Avatar>
       </div>
     </header>

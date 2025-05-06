@@ -3,7 +3,6 @@ import LandingPage from "./pages/landing-page";
 import TeachersPage from "./pages/teacher/page";
 import { useQuery } from "@tanstack/react-query";
 import { coleAPI } from "./lib/utils";
-import LoginPage from "./pages/authentication/login";
 import { useEffect } from "react";
 import { useMainStore } from "./states/store";
 import LoggedIn from "./pages/logged-in";
