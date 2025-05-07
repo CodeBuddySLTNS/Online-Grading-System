@@ -47,6 +47,10 @@ const App = () => {
           <Routes>
             <Route path="/" element={<LoggedIn />} />
             <Route path="/teacher" element={<TeachersPage />} />
+            <Route
+              path="/teacher/students/:departmentId/:yearLevel"
+              element={<TeachersPage />}
+            />
           </Routes>
         </Router>
       ) : (

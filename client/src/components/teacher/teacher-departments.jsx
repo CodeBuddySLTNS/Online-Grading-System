@@ -11,6 +11,8 @@ export default function DepartmentsPage() {
     queryFn: coleAPI("/teachers/teacher?id=" + user.userId),
   });
 
+  console.log(data);
+
   return (
     <div>
       <div className="p-8 md:px-20">
@@ -32,7 +34,7 @@ export default function DepartmentsPage() {
                       className="rounded-2xl shadow-md"
                     >
                       <CardHeader>
-                        <CardTitle>{dept.name}</CardTitle>
+                        <CardTitle className="poppins">{dept.name}</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <Button variant="default" className="w-full">
