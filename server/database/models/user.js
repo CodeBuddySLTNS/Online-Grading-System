@@ -12,6 +12,7 @@ const User = {
       LEFT JOIN departments d ON s.departmentId = d.departmentId`;
     return sqlQuery(query);
   },
+
   getUserById: async (id) => {
     const query = `SELECT 
         u.userId, u.username, u.role, u.firstName, u.middleName, u.lastName,
@@ -23,6 +24,7 @@ const User = {
       WHERE userId = ?`;
     return (await sqlQuery(query, [id]))[0];
   },
+
   getUserByUsername: async (username) => {
     const query = `SELECT 
         u.*,
@@ -35,6 +37,7 @@ const User = {
     `;
     return (await sqlQuery(query, [username]))[0];
   },
+
   add: async (data) => {
     const query = `INSERT INTO users (username, password, role, firstName, middleName, lastName)
         VALUES (?, ?, ?, ?, ?, ?);`;
