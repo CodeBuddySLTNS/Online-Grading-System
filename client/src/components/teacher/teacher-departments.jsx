@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { coleAPI } from "@/lib/utils";
 import { useMainStore } from "@/states/store";
+import { Link } from "react-router-dom";
 
 export default function DepartmentsPage() {
   const user = useMainStore((state) => state.user);
@@ -11,14 +12,14 @@ export default function DepartmentsPage() {
     queryFn: coleAPI("/teachers/teacher?id=" + user.userId),
   });
 
-  console.log(data);
-
   return (
     <div>
       <div className="p-8 md:px-20">
         <div className="flex justify-between flex-wrap">
           <h1 className="text-2xl font-bold mb-6">Departments You Handle</h1>
-          <Button variant="secondary">Handle New Department</Button>
+          <Link to="/teacher/newdepartment">
+            <Button variant="secondary">Handle New Department</Button>
+          </Link>
         </div>
         <div className="space-y-8">
           {Object.entries(data?.departments || {}).map(
@@ -31,15 +32,19 @@ export default function DepartmentsPage() {
                   {deptList.map((dept) => (
                     <Card
                       key={dept.departmentId}
-                      className="rounded-2xl shadow-md"
+                      className="rounded-2xl shadow-md transition-transform transform hover:-translate-y-1 hover:shadow-lg cursor-pointer"
                     >
                       <CardHeader>
                         <CardTitle className="poppins">{dept.name}</CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <Button variant="default" className="w-full">
-                          View Department
-                        </Button>
+                        <Link
+                          to={`/teacher/students/${dept.departmentId}/${yearLevel}`}
+                        >
+                          <Button variant="default" className="w-full">
+                            View Department
+                          </Button>
+                        </Link>
                       </CardContent>
                     </Card>
                   ))}

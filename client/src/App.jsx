@@ -6,6 +6,8 @@ import { coleAPI } from "./lib/utils";
 import { useEffect } from "react";
 import { useMainStore } from "./states/store";
 import LoggedIn from "./pages/logged-in";
+import TeacherDepartmentSelector from "./pages/teacher/handle-new-department";
+import { UsersTable } from "./pages/teacher/department-students";
 
 const App = () => {
   const isLoggedIn = useMainStore((state) => state.isLoggedIn);
@@ -48,8 +50,12 @@ const App = () => {
             <Route path="/" element={<LoggedIn />} />
             <Route path="/teacher" element={<TeachersPage />} />
             <Route
+              path="/teacher/newdepartment"
+              element={<TeacherDepartmentSelector />}
+            />
+            <Route
               path="/teacher/students/:departmentId/:yearLevel"
-              element={<TeachersPage />}
+              element={<UsersTable />}
             />
           </Routes>
         </Router>
