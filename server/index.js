@@ -14,6 +14,7 @@ app.use((req, res, next) => (console.log(req.path, req.method), next()));
 
 app.use("/auth", require("./routes/auth"));
 app.use("/users", require("./routes/users"));
+app.use("/teachers", require("./routes/teachers"));
 app.use("/departments", require("./routes/departments"));
 
 app.get("/", (req, res) => res.send("server online"));

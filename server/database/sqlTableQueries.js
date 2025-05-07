@@ -37,7 +37,7 @@ module.exports.sqlTableQueries = `
         teacherId INT NOT NULL,
         departmentId INT NOT NULL,
         yearLevel TINYINT NOT NULL CHECK (yearLevel BETWEEN 1 AND 4),
-        PRIMARY KEY (teacherId, departmentId),
+        PRIMARY KEY (teacherId, departmentId, yearLevel),
         FOREIGN KEY (teacherId) REFERENCES teachers(teacherId) ON DELETE CASCADE,
         FOREIGN KEY (departmentId) REFERENCES departments(departmentId) ON DELETE CASCADE
     );

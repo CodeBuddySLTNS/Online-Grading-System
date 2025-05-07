@@ -3,7 +3,13 @@ const Department = require("./department");
 
 const User = {
   getAll: async () => {
-    const query = `SELECT * FROM users`;
+    const query = `SELECT 
+        u.userId, u.username, u.role, u.firstName, u.middleName, u.lastName,
+        s.*,
+        d.*
+      FROM users u
+      LEFT JOIN students s ON u.userId = s.studentId
+      LEFT JOIN departments d ON s.departmentId = d.departmentId`;
     return sqlQuery(query);
   },
   getUserById: async (id) => {
@@ -45,7 +51,6 @@ const User = {
     if (rows.insertId) {
       let newQuery;
       const department = await Department.getDepartmentByName(data.department);
-      console.log(department);
       switch (data.role || "student") {
         case "student":
           newQuery = `INSERT INTO students (studentId, departmentId, yearLevel)
