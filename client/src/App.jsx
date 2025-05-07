@@ -11,7 +11,7 @@ const App = () => {
   const isLoggedIn = useMainStore((state) => state.isLoggedIn);
   const isLoading = useMainStore((state) => state.isLoading);
 
-  const { data, isLoading: loading } = useQuery({
+  const { data: user, isLoading: loading } = useQuery({
     queryKey: ["user"],
     queryFn: coleAPI("/users/user/me"),
   });
@@ -25,12 +25,12 @@ const App = () => {
   }, [loading]);
 
   useEffect(() => {
-    if (data) {
-      console.log(data);
-      useMainStore.getState().setUser(data.user);
+    if (user) {
+      console.log(user);
+      useMainStore.getState().setUser(user);
       useMainStore.getState().setIsLoggedIn(true);
     }
-  }, [data]);
+  }, [user]);
 
   if (isLoading) {
     return (
