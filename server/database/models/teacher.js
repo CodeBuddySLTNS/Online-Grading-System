@@ -1,14 +1,4 @@
-const { text } = require("express");
 const sqlQuery = require("../sqlQuery");
-
-/*
-
-INSERT INTO departments(departmentName, shortName) VALUES
-  ("Bachelor of Science in Computer Science", "BSCS"),
-  ("Bachelor of Science in Information Technology", "BSIT"),
-  ("Bachelor of Science in Social Work", "BSSW");
-
-*/
 
 const Teacher = {
   getAllWithDepartments: async () => {

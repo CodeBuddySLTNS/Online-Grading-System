@@ -11,4 +11,14 @@ const teachersById = async (req, res) => {
   res.send(teacher);
 };
 
-module.exports = { teachers, teachersById };
+const addTeacherDepartment = async (req, res) => {
+  const { teacherId, departmentId, yearLevel } = req.query.id;
+  const result = await Teacher.addTeacherDepartment(
+    teacherId,
+    departmentId,
+    yearLevel
+  );
+  res.send(result);
+};
+
+module.exports = { teachers, teachersById, addTeacherDepartment };

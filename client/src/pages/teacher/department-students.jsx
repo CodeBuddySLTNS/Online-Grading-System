@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import {
@@ -12,67 +10,10 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
-
-// Sample data (can be passed as props)
-const users = [
-  {
-    userId: 1,
-    username: "renz",
-    firstName: "renz",
-    middleName: "",
-    lastName: "cole",
-    yearLevel: 2,
-  },
-  {
-    userId: 2,
-    username: "maria",
-    firstName: "maria",
-    middleName: "s.",
-    lastName: "cruz",
-    yearLevel: 1,
-  },
-  {
-    userId: 3,
-    username: "juan",
-    firstName: "juan",
-    middleName: "",
-    lastName: "dela cruz",
-    yearLevel: 3,
-  },
-  {
-    userId: 4,
-    username: "ana",
-    firstName: "ana",
-    middleName: "l.",
-    lastName: "reyes",
-    yearLevel: 4,
-  },
-  {
-    userId: 5,
-    username: "peter",
-    firstName: "peter",
-    middleName: "b.",
-    lastName: "parker",
-    yearLevel: 2,
-  },
-  {
-    userId: 6,
-    username: "clark",
-    firstName: "clark",
-    middleName: "j.",
-    lastName: "kent",
-    yearLevel: 1,
-  },
-  {
-    userId: 7,
-    username: "bruce",
-    firstName: "bruce",
-    middleName: "w.",
-    lastName: "wayne",
-    yearLevel: 4,
-  },
-  // Add more data for testing
-];
+import { useQuery } from "@tanstack/react-query";
+import { coleAPI } from "@/lib/utils";
+import { useParams } from "react-router-dom";
+import { Header } from "@/components/header";
 
 const yearLevelText = (year) => {
   switch (year) {
@@ -89,84 +30,106 @@ const yearLevelText = (year) => {
   }
 };
 
-export function UsersTable() {
+export default function DepartmentStudents() {
+  const { departmentId, yearLevel } = useParams();
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 5; // number of items per page
-  const totalPages = Math.ceil(users.length / pageSize);
 
-  const paginatedUsers = users.slice(
+  const { data: students } = useQuery({
+    queryKey: ["students"],
+    queryFn: coleAPI(
+      `/students?departmentId=${departmentId}&yearLevel=${yearLevel}`
+    ),
+  });
+
+  const pageSize = 5;
+  const totalPages = Math.ceil(students?.length / pageSize) || 1;
+
+  const paginatedStudents = students?.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   );
 
   return (
-    <Card className="max-w-4xl mx-auto shadow-lg rounded-2xl">
-      <CardHeader className="flex items-center gap-2">
-        <User className="w-5 h-5 text-primary" />
-        <CardTitle>Users List</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="overflow-x-auto">
-          <Table className="min-w-full">
-            <TableHeader>
-              <TableRow>
-                <TableHead>User ID</TableHead>
-                <TableHead>Username</TableHead>
-                <TableHead>Full Name</TableHead>
-                <TableHead>Year Level</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {paginatedUsers.length > 0 ? (
-                paginatedUsers.map((user) => (
-                  <TableRow key={user.userId}>
-                    <TableCell>{user.userId}</TableCell>
-                    <TableCell>{user.username}</TableCell>
-                    <TableCell>
-                      {`${user.firstName} ${user.middleName} ${user.lastName}`.trim()}
-                    </TableCell>
-                    <TableCell>{yearLevelText(user.yearLevel)}</TableCell>
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main className="flex justify-center px-4 py-8">
+        <Card className="w-full max-w-5xl shadow-lg rounded-2xl gap-2">
+          <CardHeader className="flex items-center">
+            <User className="w-5 h-5 text-primary" />
+            <CardTitle className="text-lg sm:text-xl">Students List</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto rounded-lg border">
+              <Table className="min-w-full text-sm">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="whitespace-nowrap">User ID</TableHead>
+                    <TableHead className="whitespace-nowrap">
+                      Username
+                    </TableHead>
+                    <TableHead className="whitespace-nowrap">
+                      Full Name
+                    </TableHead>
+                    <TableHead className="whitespace-nowrap">
+                      Year Level
+                    </TableHead>
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={4}
-                    className="text-center text-muted-foreground"
-                  >
-                    No users found.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
+                </TableHeader>
+                <TableBody>
+                  {paginatedStudents?.length > 0 ? (
+                    paginatedStudents.map((user) => (
+                      <TableRow
+                        key={user.userId}
+                        className="hover:bg-muted transition-colors"
+                      >
+                        <TableCell>{user.userId}</TableCell>
+                        <TableCell>{user.username}</TableCell>
+                        <TableCell>
+                          {`${user.firstName} ${user.middleName} ${user.lastName}`.trim()}
+                        </TableCell>
+                        <TableCell>{yearLevelText(user.yearLevel)}</TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={4}
+                        className="text-center text-muted-foreground"
+                      >
+                        No students found.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
 
-        {/* Pagination controls */}
-        <div className="flex justify-between items-center mt-4">
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          >
-            Previous
-          </Button>
-          <span className="text-sm text-muted-foreground">
-            Page {currentPage} of {totalPages}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={currentPage === totalPages}
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-          >
-            Next
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+            <div className="flex flex-col sm:flex-row justify-between items-center mt-4 gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              >
+                Previous
+              </Button>
+              <span className="text-sm text-muted-foreground">
+                Page {currentPage} of {totalPages}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage === totalPages || totalPages === 1}
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+              >
+                Next
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </main>
+    </div>
   );
 }

@@ -8,11 +8,36 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Header } from "@/components/header";
+import { useQuery } from "@tanstack/react-query";
+import { coleAPI } from "@/lib/utils";
 
-const departments = ["BSCS", "BSIT", "BSECE"];
-const years = ["1st Year", "2nd Year", "3rd Year", "4th Year"];
+const years = [
+  {
+    value: "1",
+    label: "1st Year",
+  },
+  {
+    value: "2",
+    label: "2nd Year",
+  },
+  {
+    value: "3",
+    label: "3rd Year",
+  },
+  {
+    value: "4",
+    label: "4th Year",
+  },
+];
 
 export default function TeacherDepartmentSelector() {
+  const { data: departments } = useQuery({
+    queryKey: ["departments"],
+    queryFn: coleAPI("/departments"),
+  });
+
+  console.log(departments);
+
   const { handleSubmit, control, watch } = useForm({
     defaultValues: {
       department: "",
@@ -51,9 +76,12 @@ export default function TeacherDepartmentSelector() {
                   <SelectValue placeholder="Select Department" />
                 </SelectTrigger>
                 <SelectContent>
-                  {departments.map((dept) => (
-                    <SelectItem key={dept} value={dept}>
-                      {dept}
+                  {departments?.map((dept) => (
+                    <SelectItem
+                      key={dept.departmentId}
+                      value={String(dept.departmentId)}
+                    >
+                      {dept.departmentName}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -74,8 +102,8 @@ export default function TeacherDepartmentSelector() {
                 </SelectTrigger>
                 <SelectContent>
                   {years.map((year) => (
-                    <SelectItem key={year} value={year}>
-                      {year}
+                    <SelectItem key={year.value} value={year.value}>
+                      {year.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
