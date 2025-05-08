@@ -49,6 +49,7 @@ const Teacher = {
         CONCAT(u.firstName, ' ', u.lastName) AS teacherName, 
         d.departmentId, 
         d.departmentName, 
+        d.shortName, 
         td.yearLevel
       FROM teachers t
       JOIN users u ON t.teacherId = u.userId
@@ -64,6 +65,7 @@ const Teacher = {
         teacherName,
         departmentId,
         departmentName,
+        shortName,
         yearLevel,
       } = row;
       if (!acc[teacherId]) {
@@ -76,6 +78,7 @@ const Teacher = {
         acc[teacherId].departments[yearLevel].push({
           departmentId,
           name: departmentName,
+          short: shortName,
         });
       }
       return acc;
