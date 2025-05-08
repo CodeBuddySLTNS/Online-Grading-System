@@ -8,24 +8,9 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import { coleAPI } from "@/lib/utils";
+import { coleAPI, yearLevelText } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { User, BookOpen, School } from "lucide-react";
-
-const yearLevelText = (year) => {
-  switch (year) {
-    case 1:
-      return "1st Year";
-    case 2:
-      return "2nd Year";
-    case 3:
-      return "3rd Year";
-    case 4:
-      return "4th Year";
-    default:
-      return "Unknown";
-  }
-};
 
 export default function StudentPortal() {
   const { data: student } = useQuery({
@@ -42,7 +27,7 @@ export default function StudentPortal() {
             <User className="w-10 h-10 text-primary shrink-0" />
             <div>
               <h1 className="text-xl font-bold leading-tight">
-                Welcome, {student.firstName}!
+                Welcome, {student?.firstName}!
               </h1>
               <p className="text-muted-foreground text-sm">
                 Student Portal Dashboard
@@ -61,20 +46,20 @@ export default function StudentPortal() {
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-sm">
             <div>
               <span className="font-semibold">Full Name:</span>{" "}
-              {student.firstName} {student.middleName} {student.lastName}
+              {student?.firstName} {student?.middleName} {student?.lastName}
             </div>
             <div>
               <span className="font-semibold">Username:</span>{" "}
-              {student.username}
+              {student?.username}
             </div>
 
             <div>
               <span className="font-semibold">Department:</span>{" "}
-              {student.departmentName} ({student.shortName})
+              {student?.departmentName} ({student?.shortName})
             </div>
             <div>
               <span className="font-semibold">Year Level:</span>{" "}
-              {yearLevelText(student.yearLevel)}
+              {yearLevelText(student?.yearLevel)}
             </div>
           </CardContent>
         </Card>

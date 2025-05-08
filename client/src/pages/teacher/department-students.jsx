@@ -63,14 +63,16 @@ export default function DepartmentStudents() {
               <Table className="min-w-full text-sm">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="whitespace-nowrap">User ID</TableHead>
-                    <TableHead className="whitespace-nowrap">
+                    <TableHead className="w-20 whitespace-nowrap">
+                      User ID
+                    </TableHead>
+                    <TableHead className="whitespace-nowrap text-center">
                       Username
                     </TableHead>
-                    <TableHead className="whitespace-nowrap">
+                    <TableHead className="whitespace-nowrap text-center">
                       Full Name
                     </TableHead>
-                    <TableHead className="whitespace-nowrap">
+                    <TableHead className="whitespace-nowrap text-center">
                       Year Level
                     </TableHead>
                   </TableRow>
@@ -83,11 +85,15 @@ export default function DepartmentStudents() {
                         className="hover:bg-muted transition-colors"
                       >
                         <TableCell>{user.userId}</TableCell>
-                        <TableCell>{user.username}</TableCell>
-                        <TableCell>
+                        <TableCell className="text-center">
+                          {user.username}
+                        </TableCell>
+                        <TableCell className="text-center">
                           {`${user.firstName} ${user.middleName} ${user.lastName}`.trim()}
                         </TableCell>
-                        <TableCell>{yearLevelText(user.yearLevel)}</TableCell>
+                        <TableCell className="text-center">
+                          {yearLevelText(user.yearLevel)}
+                        </TableCell>
                       </TableRow>
                     ))
                   ) : (

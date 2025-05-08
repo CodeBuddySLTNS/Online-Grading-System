@@ -8,8 +8,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Header } from "@/components/header";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { coleAPI } from "@/lib/utils";
+import { useMainStore } from "@/states/store";
+import { toast } from "sonner";
 
 const years = [
   {
@@ -31,12 +33,47 @@ const years = [
 ];
 
 export default function TeacherDepartmentSelector() {
+  const user = useMainStore((state) => state.user);
+
   const { data: departments } = useQuery({
     queryKey: ["departments"],
     queryFn: coleAPI("/departments"),
   });
 
-  console.log(departments);
+  const { mutateAsync: handleDepartment } = useMutation({
+    mutationFn: coleAPI(`/teachers/teacher/newdepartment`, "POST"),
+    onSuccess: () => {
+      toast("Success!", {
+        description: "Department has been successfully handled.",
+        style: {
+          fontSize: "1rem",
+          backgroundColor: "#d4edda",
+          color: "#155724",
+        },
+      });
+    },
+    onError: (e) => {
+      if (e.response?.data?.message) {
+        toast("Error!", {
+          description: e.response?.data?.message,
+          style: {
+            fontSize: "1rem",
+            backgroundColor: "#f8d7da",
+            color: "#721c24",
+          },
+        });
+      } else {
+        toast("Error!", {
+          description: "Unable to connect to the server.",
+          style: {
+            fontSize: "1rem",
+            backgroundColor: "#f8d7da",
+            color: "#721c24",
+          },
+        });
+      }
+    },
+  });
 
   const { handleSubmit, control, watch } = useForm({
     defaultValues: {
@@ -45,12 +82,23 @@ export default function TeacherDepartmentSelector() {
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (!data.department || !data.year) {
       alert("Please select both department and year level.");
       return;
     }
-    alert(`Selected: ${data.department} - ${data.year}`);
+
+    const payload = {
+      teacherId: user.userId,
+      departmentId: Number(data.department),
+      yearLevel: Number(data.year),
+    };
+
+    try {
+      await handleDepartment(payload);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const selectedDepartment = watch("department");
