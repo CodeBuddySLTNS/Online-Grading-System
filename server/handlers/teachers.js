@@ -12,12 +12,13 @@ const teachersById = async (req, res) => {
 };
 
 const addTeacherDepartment = async (req, res) => {
-  const { teacherId, departmentId, yearLevel } = req.query.id;
+  const { teacherId, departmentId, yearLevel } = req.body;
   const result = await Teacher.addTeacherDepartment(
     teacherId,
     departmentId,
     yearLevel
   );
+  console.log(result);
   res.send(result);
 };
 
