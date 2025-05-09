@@ -14,9 +14,14 @@ const teachersById = async (req, res) => {
 const addTeacherDepartment = async (req, res) => {
   const { teacherId, departmentId, yearLevel, subjectId } = req.body;
   console.log(req.body);
-  return;
 
   await Teacher.addTeacherDepartment(teacherId, departmentId, yearLevel);
+  await Teacher.addTeacherDepartmentSubject(
+    teacherId,
+    departmentId,
+    yearLevel,
+    subjectId
+  );
   res.send({ message: "Success!" });
 };
 

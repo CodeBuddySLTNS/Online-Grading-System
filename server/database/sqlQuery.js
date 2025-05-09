@@ -15,10 +15,13 @@ const sqlQuery = async (query, params) => {
           throw new CustomError(error.message, status.BAD_REQUEST, error);
 
         case "ER_DUP_ENTRY":
-          throw new CustomError(error.message, status.CONFLICT, error);
+          throw new CustomError("Already exists!", status.CONFLICT, error);
 
         case "ECONNREFUSED":
-          throw new Error("Database connection error.");
+          throw new CustomError(
+            "Database connection error.",
+            status.INTERNAL_SERVER_ERROR
+          );
 
         default:
           throw new CustomError(error.message, status.CONFLICT, error);

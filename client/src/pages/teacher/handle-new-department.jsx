@@ -53,7 +53,7 @@ export default function TeacherDepartmentSelector() {
     mutationFn: coleAPI(`/teachers/teacher/newdepartment`, "POST"),
     onSuccess: () => {
       toast("Success!", {
-        description: "Department has been successfully handled.",
+        description: "Department Subject has been successfully handled.",
         style: {
           fontSize: "1rem",
           backgroundColor: "#d4edda",
