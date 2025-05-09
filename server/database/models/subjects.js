@@ -7,7 +7,7 @@ const Subject = {
   },
 
   add: async (code, subjectName) => {
-    const query = `INSERT INTO subejcts (code, subjectName) VALUES (?, ?)`;
+    const query = `INSERT INTO subjects (code, subjectName) VALUES (?, ?)`;
     const params = [code, subjectName];
     return await sqlQuery(query, params);
   },
@@ -20,6 +20,17 @@ const Subject = {
   }) => {
     const query = `INSERT INTO departmentSubjects (subjectId, departmentId, yearLevel, semester) VALUES (?, ?, ?, ?)`;
     const params = [subjectId, departmentId, yearLevel, semester];
+    return await sqlQuery(query, params);
+  },
+
+  getDepartmentSubjects: async (departmentId, yearLevel) => {
+    const query = `
+      SELECT ds.subjectId, s.code, s.subjectName, ds.yearLevel, ds.semester
+      FROM departmentSubjects ds
+      INNER JOIN subjects s ON ds.subjectId = s.subjectId
+      WHERE ds.departmentId = ? AND ds.yearLevel = ?
+    `;
+    const params = [departmentId, yearLevel];
     return await sqlQuery(query, params);
   },
 };

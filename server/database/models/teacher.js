@@ -94,6 +94,19 @@ const Teacher = {
     `;
     return await sqlQuery(query, [teacherId, departmentId, yearLevel]);
   },
+
+  addTeacherDepartmentSubject: async (
+    teacherId,
+    departmentId,
+    yearLevel,
+    subjectId
+  ) => {
+    const query = `
+      INSERT INTO teacherDepartmentSubjects (teacherId, departmentId, yearLevel, subjectId)
+      VALUES (?, ?, ?, ?)
+    `;
+    return await sqlQuery(query, [teacherId, departmentId, yearLevel]);
+  },
 };
 
 module.exports = Teacher;

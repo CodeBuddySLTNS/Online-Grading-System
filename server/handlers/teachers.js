@@ -12,13 +12,12 @@ const teachersById = async (req, res) => {
 };
 
 const addTeacherDepartment = async (req, res) => {
-  const { teacherId, departmentId, yearLevel } = req.body;
-  const result = await Teacher.addTeacherDepartment(
-    teacherId,
-    departmentId,
-    yearLevel
-  );
-  res.send(result);
+  const { teacherId, departmentId, yearLevel, subjectId } = req.body;
+  console.log(req.body);
+  return;
+
+  await Teacher.addTeacherDepartment(teacherId, departmentId, yearLevel);
+  res.send({ message: "Success!" });
 };
 
 module.exports = { teachers, teachersById, addTeacherDepartment };

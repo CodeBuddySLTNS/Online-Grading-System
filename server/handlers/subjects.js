@@ -1,6 +1,7 @@
 const Joi = require("joi");
 const Subject = require("../database/models/subjects");
 const { CustomError } = require("../lib/utils");
+const { default: status } = require("http-status");
 
 const subjects = async (req, res) => {
   const subjects = await Subject.getAll();
@@ -16,6 +17,25 @@ const addSubject = async (req, res) => {
 
   const result = await Subject.add(code, subjectName);
   res.send(result);
+};
+
+const departmentSubjects = async (req, res) => {
+  const { departmentId, yearLevel } = req.query;
+
+  if (!departmentId || !yearLevel) {
+    throw new CustomError(
+      "departmentId and yearLevel is required.",
+      status.BAD_REQUEST
+    );
+  }
+
+  const departmentSubjects = await Subject.getDepartmentSubjects(
+    departmentId,
+    yearLevel
+  );
+
+  console.log(departmentSubjects);
+  res.send(departmentSubjects);
 };
 
 const addDepartmentSubject = async (req, res) => {
@@ -54,4 +74,9 @@ const addDepartmentSubject = async (req, res) => {
   res.send(result);
 };
 
-module.exports = { subjects, addSubject, addDepartmentSubject };
+module.exports = {
+  subjects,
+  addSubject,
+  addDepartmentSubject,
+  departmentSubjects,
+};

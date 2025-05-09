@@ -55,7 +55,7 @@ const InsertDepartmentSubjectForm = () => {
   });
 
   const { mutateAsync: addDepartmentSubject } = useMutation({
-    mutationFn: coleAPI("/subjects/add/departmentsubject", "POST"),
+    mutationFn: coleAPI("/subjects/departmentsubjects/add", "POST"),
     onSuccess: () => {
       toast("Success!", {
         description: "Subject assigned successfully.",

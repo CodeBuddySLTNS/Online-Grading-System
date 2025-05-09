@@ -8,10 +8,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Header } from "@/components/header";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { coleAPI } from "@/lib/utils";
 import { useMainStore } from "@/states/store";
 import { toast } from "sonner";
+import { useEffect, useState } from "react";
 
 const years = [
   {
@@ -33,11 +34,19 @@ const years = [
 ];
 
 export default function TeacherDepartmentSelector() {
+  const [parameters, setParameters] = useState("");
   const user = useMainStore((state) => state.user);
+
+  const queryClient = useQueryClient();
 
   const { data: departments } = useQuery({
     queryKey: ["departments"],
     queryFn: coleAPI("/departments"),
+  });
+
+  const { data: departmentSubjects, isPending } = useQuery({
+    queryKey: ["departmentSubjects"],
+    queryFn: coleAPI("/subjects/departmentsubjects" + parameters),
   });
 
   const { mutateAsync: handleDepartment } = useMutation({
@@ -79,12 +88,12 @@ export default function TeacherDepartmentSelector() {
     defaultValues: {
       department: "",
       year: "",
-      courseCode: "",
+      subjectId: "",
     },
   });
 
   const onSubmit = async (data) => {
-    if (!data.department || !data.year || !data.courseCode) {
+    if (!data.department || !data.year || !data.subjectId) {
       alert("Please select department, year level, and course.");
       return;
     }
@@ -93,7 +102,7 @@ export default function TeacherDepartmentSelector() {
       teacherId: user.userId,
       departmentId: Number(data.department),
       yearLevel: Number(data.year),
-      courseCode: Number(data.courseCode),
+      subjectId: Number(data.subjectId),
     };
 
     try {
@@ -103,9 +112,23 @@ export default function TeacherDepartmentSelector() {
     }
   };
 
-  watch("department");
-  watch("year");
-  watch("courseCode");
+  const watchedDepartment = watch("department");
+  const watchedYear = watch("year");
+  watch("subjectId");
+
+  useEffect(() => {
+    if (watchedDepartment && watchedYear) {
+      setParameters(
+        `?departmentId=${watchedDepartment}&yearLevel=${watchedYear}`
+      );
+    }
+  }, [watchedDepartment, watchedYear]);
+
+  useEffect(() => {
+    if (parameters) {
+      queryClient.invalidateQueries(["departmentSubjects"]);
+    }
+  }, [parameters, queryClient]);
 
   return (
     <div>
@@ -164,21 +187,38 @@ export default function TeacherDepartmentSelector() {
         </div>
 
         <div>
-          <label className="block mb-1 font-medium">Year Level</label>
+          <label className="block mb-1 font-medium">Subject</label>
           <Controller
-            name="courseCode"
+            name="subjectId"
             control={control}
             render={({ field }) => (
               <Select onValueChange={field.onChange} value={field.value}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select Course" />
+                  <SelectValue placeholder="Select Subject" />
                 </SelectTrigger>
                 <SelectContent>
-                  {years.map((year) => (
-                    <SelectItem key={year.value} value={year.value}>
-                      {year.label}
-                    </SelectItem>
-                  ))}
+                  {departmentSubjects && departmentSubjects.length > 0 ? (
+                    departmentSubjects.map((subject) => (
+                      <SelectItem
+                        key={subject.subjectId}
+                        value={String(subject.subjectId)}
+                      >
+                        {subject.subjectName}
+                      </SelectItem>
+                    ))
+                  ) : isPending ? (
+                    <p className="text-center text-sm text-muted-foreground">
+                      loading...
+                    </p>
+                  ) : !parameters ? (
+                    <p className="text-center text-sm text-muted-foreground">
+                      Please select department and year first.
+                    </p>
+                  ) : (
+                    <p className="text-center text-sm text-muted-foreground">
+                      No assigned subjects.
+                    </p>
+                  )}
                 </SelectContent>
               </Select>
             )}
