@@ -10,7 +10,7 @@ const User = {
       FROM users u
       LEFT JOIN students s ON u.userId = s.studentId
       LEFT JOIN departments d ON s.departmentId = d.departmentId`;
-    return sqlQuery(query);
+    return await sqlQuery(query);
   },
 
   getUserById: async (id) => {
