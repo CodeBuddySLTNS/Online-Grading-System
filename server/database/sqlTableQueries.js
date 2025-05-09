@@ -44,7 +44,7 @@ module.exports.sqlTableQueries = `
 
     CREATE TABLE IF NOT EXISTS subjects (
         subjectId INT AUTO_INCREMENT PRIMARY KEY,
-        code VARCHAR(10) NOT NULL,
+        code VARCHAR(10) NOT NULL UNIQUE,
         subjectName VARCHAR(100) NOT NULL
     );
 
