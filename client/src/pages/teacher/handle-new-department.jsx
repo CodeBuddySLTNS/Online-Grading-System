@@ -79,12 +79,13 @@ export default function TeacherDepartmentSelector() {
     defaultValues: {
       department: "",
       year: "",
+      courseCode: "",
     },
   });
 
   const onSubmit = async (data) => {
-    if (!data.department || !data.year) {
-      alert("Please select both department and year level.");
+    if (!data.department || !data.year || !data.courseCode) {
+      alert("Please select department, year level, and course.");
       return;
     }
 
@@ -92,6 +93,7 @@ export default function TeacherDepartmentSelector() {
       teacherId: user.userId,
       departmentId: Number(data.department),
       yearLevel: Number(data.year),
+      courseCode: Number(data.courseCode),
     };
 
     try {
@@ -101,8 +103,9 @@ export default function TeacherDepartmentSelector() {
     }
   };
 
-  const selectedDepartment = watch("department");
-  const selectedYear = watch("year");
+  watch("department");
+  watch("year");
+  watch("courseCode");
 
   return (
     <div>
@@ -160,16 +163,31 @@ export default function TeacherDepartmentSelector() {
           />
         </div>
 
+        <div>
+          <label className="block mb-1 font-medium">Year Level</label>
+          <Controller
+            name="courseCode"
+            control={control}
+            render={({ field }) => (
+              <Select onValueChange={field.onChange} value={field.value}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select Course" />
+                </SelectTrigger>
+                <SelectContent>
+                  {years.map((year) => (
+                    <SelectItem key={year.value} value={year.value}>
+                      {year.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          />
+        </div>
+
         <Button type="submit" className="w-full">
           Confirm Selection
         </Button>
-
-        {selectedDepartment && selectedYear && (
-          <div className="text-muted-foreground">
-            You selected: <strong>{selectedDepartment}</strong> -{" "}
-            <strong>{selectedYear}</strong>
-          </div>
-        )}
       </form>
     </div>
   );

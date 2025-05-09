@@ -11,8 +11,8 @@ module.exports.sqlTableQueries = `
 
     CREATE TABLE IF NOT EXISTS departments (
         departmentId INT AUTO_INCREMENT PRIMARY KEY,
-        departmentName VARCHAR(100) NOT NULL,
-        shortName VARCHAR(10) NOT NULL
+        departmentName VARCHAR(100) NOT NULL UNIQUE,
+        shortName VARCHAR(10) NOT NULL UNIQUE
     );
 
     CREATE TABLE IF NOT EXISTS schoolYears (
@@ -44,24 +44,58 @@ module.exports.sqlTableQueries = `
 
     CREATE TABLE IF NOT EXISTS subjects (
         subjectId INT AUTO_INCREMENT PRIMARY KEY,
-        subjectName VARCHAR(100) NOT NULL,
+        code VARCHAR(10) NOT NULL,
+        subjectName VARCHAR(100) NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS departmentSubjects (
+        subjectId INT NOT NULL,
+        departmentId INT NOT NULL,
+        yearLevel TINYINT NOT NULL CHECK (yearLevel BETWEEN 1 AND 4),
+        semester TINYINT NOT NULL CHECK (semester IN (1, 2)),
+        PRIMARY KEY (departmentId, subjectId),
+        FOREIGN KEY (departmentId) REFERENCES departments(departmentId) ON DELETE CASCADE,
+        FOREIGN KEY (subjectId) REFERENCES subjects(subjectId) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS teacherDepartmentSubjects (
         teacherId INT NOT NULL,
         departmentId INT NOT NULL,
+        yearLevel TINYINT NOT NULL CHECK (yearLevel BETWEEN 1 AND 4),
+        subjectId INT NOT NULL,
+        PRIMARY KEY (teacherId, departmentId, yearLevel, subjectId),
+        FOREIGN KEY (teacherId, departmentId, yearLevel)
+        REFERENCES teacherDepartments(teacherId, departmentId, yearLevel) ON DELETE CASCADE,
+        FOREIGN KEY (subjectId) REFERENCES subjects(subjectId) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS studentSubjects (
+        studentId INT NOT NULL,
+        teacherId INT NOT NULL,
+        departmentId INT NOT NULL,
+        yearLevel TINYINT NOT NULL,
         schoolYearId INT NOT NULL,
-        semester TINYINT NOT NULL CHECK (semester IN (1, 2)),
+        subjectId INT NOT NULL,
+        PRIMARY KEY (studentId, subjectId, schoolYearId),
+        FOREIGN KEY (studentId) REFERENCES students(studentId) ON DELETE CASCADE,
         FOREIGN KEY (teacherId) REFERENCES teachers(teacherId) ON DELETE CASCADE,
         FOREIGN KEY (departmentId) REFERENCES departments(departmentId) ON DELETE CASCADE,
-        FOREIGN KEY (schoolYearId) REFERENCES schoolYears(schoolYearId) ON DELETE CASCADE
+        FOREIGN KEY (schoolYearId) REFERENCES schoolYears(schoolYearId) ON DELETE CASCADE,
+        FOREIGN KEY (subjectId) REFERENCES subjects(subjectId) ON DELETE CASCADE
     );
 
     CREATE TABLE IF NOT EXISTS grades (
         gradeId INT AUTO_INCREMENT PRIMARY KEY,
         studentId INT NOT NULL,
+        teacherId INT NOT NULL,
+        departmentId INT NOT NULL,
+        yearLevel TINYINT NOT NULL CHECK (yearLevel BETWEEN 1 AND 4),
         subjectId INT NOT NULL,
         schoolYearId INT NOT NULL,
         gradeValue DECIMAL(5,2) NOT NULL,
         FOREIGN KEY (studentId) REFERENCES students(studentId) ON DELETE CASCADE,
-        FOREIGN KEY (subjectId) REFERENCES subjects(subjectId) ON DELETE CASCADE,
+        FOREIGN KEY (teacherId, departmentId, yearLevel, subjectId)
+            REFERENCES teacherDepartmentSubjects(teacherId, departmentId, yearLevel, subjectId) ON DELETE CASCADE,
         FOREIGN KEY (schoolYearId) REFERENCES schoolYears(schoolYearId) ON DELETE CASCADE
     );
 `;

@@ -18,7 +18,6 @@ const addTeacherDepartment = async (req, res) => {
     departmentId,
     yearLevel
   );
-  console.log(result);
   res.send(result);
 };
 

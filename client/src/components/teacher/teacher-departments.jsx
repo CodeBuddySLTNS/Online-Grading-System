@@ -40,9 +40,7 @@ export default function DepartmentsPage() {
                         </CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <Link
-                          to={`/teacher/students/${dept.departmentId}/${yearLevel}`}
-                        >
+                        <Link to={`/teacher/subjects`}>
                           <Button variant="default" className="w-full">
                             View Department
                           </Button>
