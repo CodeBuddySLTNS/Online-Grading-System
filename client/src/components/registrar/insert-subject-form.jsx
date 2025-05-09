@@ -1,22 +1,73 @@
-import React from "react";
 import { useForm } from "react-hook-form";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import axios from "axios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { coleAPI } from "@/lib/utils";
+import Joi from "joi";
+import { joiResolver } from "@hookform/resolvers/joi";
+import { toast } from "sonner";
+
+const schema = Joi.object({
+  code: Joi.string().label("Subject Code").required(),
+  subjectName: Joi.string().label("Subject Name").required(),
+});
 
 const InsertSubjectForm = () => {
-  const { register, handleSubmit, reset } = useForm();
+  const queryClient = useQueryClient();
+
+  const { mutateAsync: addSubject } = useMutation({
+    mutationFn: coleAPI("/subjects/add", "POST"),
+    onSuccess: () => {
+      toast("Success!", {
+        description: "Subject added successfully.",
+        style: {
+          fontSize: "1rem",
+          backgroundColor: "#d4edda",
+          color: "#155724",
+        },
+      });
+      queryClient.invalidateQueries(["subjects"]);
+      reset();
+    },
+    onError: (e) => {
+      if (e.response?.data?.message) {
+        toast("Error!", {
+          description: e.response?.data?.message,
+          style: {
+            fontSize: "1rem",
+            backgroundColor: "#f8d7da",
+            color: "#721c24",
+          },
+        });
+      } else {
+        toast("Error!", {
+          description: "Unable to connect to the server.",
+          style: {
+            fontSize: "1rem",
+            backgroundColor: "#f8d7da",
+            color: "#721c24",
+          },
+        });
+      }
+    },
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: joiResolver(schema),
+  });
 
   const onSubmit = async (data) => {
     try {
-      await axios.post("/api/subjects", data);
-      alert("Subject inserted successfully!");
-      reset();
-    } catch (err) {
-      console.error(err);
-      alert("Error inserting subject");
+      await addSubject(data);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -33,14 +84,27 @@ const InsertSubjectForm = () => {
           <div className="flex-1 flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="code">Subject Code</Label>
-              <Input id="code" {...register("code", { required: true })} />
+              <Input
+                id="code"
+                {...register("code")}
+                placeholder="Enter subject code"
+              />
+              {errors.code && (
+                <p className="text-sm text-red-500">{errors.code.message}</p>
+              )}
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="subjectName">Subject Name</Label>
               <Input
                 id="subjectName"
-                {...register("subjectName", { required: true })}
+                {...register("subjectName")}
+                placeholder="Enter subject name"
               />
+              {errors.subjectName && (
+                <p className="text-sm text-red-500">
+                  {errors.subjectName.message}
+                </p>
+              )}
             </div>
           </div>
           <Button type="submit">Submit</Button>

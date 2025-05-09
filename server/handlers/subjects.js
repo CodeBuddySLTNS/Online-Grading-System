@@ -20,11 +20,9 @@ const addSubject = async (req, res) => {
 
 const addDepartmentSubject = async (req, res) => {
   const schema = Joi.object({
-    code: Joi.string().required().messages({
-      "string.empty": "Code is required.",
-    }),
-    subjectName: Joi.string().required().messages({
-      "string.empty": "Subject Name is required.",
+    subjectId: Joi.number().integer().required().messages({
+      "number.base": "Subject ID must be a number.",
+      "any.required": "Subject ID is required.",
     }),
     departmentId: Joi.number().integer().required().messages({
       "number.base": "Department ID must be a number.",
