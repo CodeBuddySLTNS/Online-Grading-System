@@ -1,13 +1,6 @@
 import { useState } from "react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-} from "@/components/ui/table";
+
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
 import { useParams } from "react-router-dom";
@@ -18,6 +11,7 @@ import { coleAPI } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useMainStore } from "@/states/store";
 import NavigateBack from "@/components/back";
+import StudentGrades from "@/components/teacher/student-grades";
 
 export default function DepartmentStudents() {
   const { departmentId, yearLevel, departmentShortName, sy } = useParams();
@@ -26,6 +20,8 @@ export default function DepartmentStudents() {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const user = useMainStore((state) => state.user);
+
+  const params = `?teacherId=${user.userId}&departmentId=${departmentId}&yearLevel=${yearLevel}&schoolYearId=${sy}&subjectId=${subject?.subjectId}`;
 
   const { data: subjects } = useQuery({
     queryKey: ["subjects"],
@@ -76,7 +72,7 @@ export default function DepartmentStudents() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="flex justify-center p-4 md:px-20">
+      <main className="flex justify-center px-4 py-8 md:px-20">
         {subject ? (
           <div className="w-full flex flex-col justify-center items-center">
             <NavigateBack onBackFn={() => setSubject("")} />
@@ -96,63 +92,23 @@ export default function DepartmentStudents() {
                 </div>
                 <ExcelUploader
                   setData={setStudentsGrades}
+                  departmentId={departmentId}
                   department={departmentShortName}
                   year={yearLevel}
                   subject={subject}
+                  sy={sy}
                 />
               </CardHeader>
               <CardContent>
-                {studentsGrades.length > 0 ? (
-                  <div className="overflow-x-auto rounded-lg border">
-                    <Table className="min-w-full text-sm">
-                      <TableHeader>
-                        <TableRow>
-                          {studentsGrades[0]?.map((header, index) => (
-                            <TableHead
-                              key={index}
-                              className={`whitespace-nowrap ${
-                                index > 0 && "text-center"
-                              } cursor-pointer`}
-                              onClick={() => handleSort(index)}
-                            >
-                              {header}
-                              {sortConfig.key === index && (
-                                <span>
-                                  {sortConfig.direction === "ascending"
-                                    ? " 🔼"
-                                    : " 🔽"}
-                                </span>
-                              )}
-                            </TableHead>
-                          ))}
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {paginatedData.map((row, rowIndex) => (
-                          <TableRow
-                            key={rowIndex}
-                            className="hover:bg-muted transition-colors"
-                          >
-                            {row.map((cell, cellIndex) => (
-                              <TableCell
-                                key={cellIndex}
-                                className={cellIndex === 0 ? "" : "text-center"}
-                              >
-                                {cell}
-                              </TableCell>
-                            ))}
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                ) : (
-                  <div className="h-28 flex justify-center items-center rounded-lg border">
-                    <p className="text-center text-muted-foreground">
-                      No grades to load.
-                    </p>
-                  </div>
-                )}
+                <StudentGrades
+                  setData={setStudentsGrades}
+                  paginatedData={paginatedData}
+                  handleSort={handleSort}
+                  studentsGrades={studentsGrades}
+                  sortConfig={sortConfig}
+                  params={params}
+                />
+
                 <div className="mt-4 flex justify-between items-center">
                   <Button
                     onClick={handlePreviousPage}

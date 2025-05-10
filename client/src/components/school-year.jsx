@@ -18,7 +18,7 @@ export function SchoolYearList({ schoolYears = [], onSelect }) {
               <Button
                 key={sy.schoolYearId}
                 variant="outline"
-                className="w-full text-lg font-semibold justify-start text-center px-4 py-6 hover:bg-primary hover:text-primary-foreground transition"
+                className="w-full text-lg font-semibold justify-start text-center px-4 py-6 hover:bg-secondary hover:text-primary hover:shadow transition"
                 onClick={() => onSelect?.(sy)}
               >
                 {sy.schoolYearName}

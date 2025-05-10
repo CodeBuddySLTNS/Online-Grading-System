@@ -18,6 +18,7 @@ app.use("/teachers", require("./routes/teachers"));
 app.use("/registrar", require("./routes/registrar"));
 app.use("/students", require("./routes/students"));
 app.use("/subjects", require("./routes/subjects"));
+app.use("/grades", require("./routes/grades"));
 app.use("/departments", require("./routes/departments"));
 
 app.get("/", (req, res) => res.send("server online"));

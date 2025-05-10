@@ -4,10 +4,19 @@ import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { coleAPI } from "@/lib/utils";
+import { useMainStore } from "@/states/store";
 
-const ExcelUploader = ({ department, year, subject, setData }) => {
+const ExcelUploader = ({
+  department,
+  departmentId,
+  year,
+  subject,
+  sy,
+  setData,
+}) => {
   const [changed, setChanged] = useState(false);
   const [extractedData, setExtractedData] = useState(null);
+  const user = useMainStore((state) => state.user);
   const inputRef = useRef(null);
 
   const { mutateAsync: sendChangesToServer } = useMutation({
@@ -48,10 +57,16 @@ const ExcelUploader = ({ department, year, subject, setData }) => {
 
   const saveChanges = async () => {
     if (extractedData) {
-      sendChangesToServer({
+      const body = {
+        teacherId: user.userId,
+        departmentId: Number(departmentId),
+        yearLevel: Number(year),
+        subjectId: subject.subjectId,
+        schoolYearId: Number(sy),
         excelData: extractedData,
         fileName: `${department}-${year}-${subject.code}.xlsx`,
-      });
+      };
+      await sendChangesToServer(body);
     }
   };
 

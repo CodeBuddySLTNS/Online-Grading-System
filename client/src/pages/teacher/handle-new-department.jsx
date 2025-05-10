@@ -14,6 +14,7 @@ import { useMainStore } from "@/states/store";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import NavigateBack from "@/components/back";
 
 const years = [
   {
@@ -136,102 +137,109 @@ export default function TeacherDepartmentSelector() {
   return (
     <div>
       <Header />
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="max-w-md mx-auto p-8 space-y-6"
-      >
-        <h1 className="text-2xl font-bold">Select Department and Year Level</h1>
-
-        <div>
-          <label className="block mb-1 font-medium">Department</label>
-          <Controller
-            name="department"
-            control={control}
-            render={({ field }) => (
-              <Select onValueChange={field.onChange} value={field.value}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select Department" />
-                </SelectTrigger>
-                <SelectContent>
-                  {departments?.map((dept) => (
-                    <SelectItem
-                      key={dept.departmentId}
-                      value={String(dept.departmentId)}
-                    >
-                      {dept.departmentName}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          />
+      <div>
+        <div className="max-w-md mx-auto pt-8 px-0 space-y-6">
+          <NavigateBack />
         </div>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="max-w-md mx-auto p-8 pt-0 space-y-6"
+        >
+          <h1 className="text-2xl font-bold">
+            Select Department and Year Level
+          </h1>
 
-        <div>
-          <label className="block mb-1 font-medium">Year Level</label>
-          <Controller
-            name="year"
-            control={control}
-            render={({ field }) => (
-              <Select onValueChange={field.onChange} value={field.value}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select Year Level" />
-                </SelectTrigger>
-                <SelectContent>
-                  {years.map((year) => (
-                    <SelectItem key={year.value} value={year.value}>
-                      {year.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          />
-        </div>
-
-        <div>
-          <label className="block mb-1 font-medium">Subject</label>
-          <Controller
-            name="subjectId"
-            control={control}
-            render={({ field }) => (
-              <Select onValueChange={field.onChange} value={field.value}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select Subject" />
-                </SelectTrigger>
-                <SelectContent>
-                  {departmentSubjects && departmentSubjects.length > 0 ? (
-                    departmentSubjects.map((subject) => (
+          <div>
+            <label className="block mb-1 font-medium">Department</label>
+            <Controller
+              name="department"
+              control={control}
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select Department" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {departments?.map((dept) => (
                       <SelectItem
-                        key={subject.subjectId}
-                        value={String(subject.subjectId)}
+                        key={dept.departmentId}
+                        value={String(dept.departmentId)}
                       >
-                        {subject.subjectName}
+                        {dept.departmentName}
                       </SelectItem>
-                    ))
-                  ) : isPending ? (
-                    <p className="text-center text-sm text-muted-foreground">
-                      loading...
-                    </p>
-                  ) : !parameters ? (
-                    <p className="text-center text-sm text-muted-foreground">
-                      Please select department and year first.
-                    </p>
-                  ) : (
-                    <p className="text-center text-sm text-muted-foreground">
-                      No assigned subjects.
-                    </p>
-                  )}
-                </SelectContent>
-              </Select>
-            )}
-          />
-        </div>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </div>
 
-        <Button type="submit" className="w-full">
-          Confirm Selection
-        </Button>
-      </form>
+          <div>
+            <label className="block mb-1 font-medium">Year Level</label>
+            <Controller
+              name="year"
+              control={control}
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select Year Level" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {years.map((year) => (
+                      <SelectItem key={year.value} value={year.value}>
+                        {year.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </div>
+
+          <div>
+            <label className="block mb-1 font-medium">Subject</label>
+            <Controller
+              name="subjectId"
+              control={control}
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select Subject" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {departmentSubjects && departmentSubjects.length > 0 ? (
+                      departmentSubjects.map((subject) => (
+                        <SelectItem
+                          key={subject.subjectId}
+                          value={String(subject.subjectId)}
+                        >
+                          {subject.subjectName}
+                        </SelectItem>
+                      ))
+                    ) : isPending ? (
+                      <p className="text-center text-sm text-muted-foreground">
+                        loading...
+                      </p>
+                    ) : !parameters ? (
+                      <p className="text-center text-sm text-muted-foreground">
+                        Please select department and year first.
+                      </p>
+                    ) : (
+                      <p className="text-center text-sm text-muted-foreground">
+                        No assigned subjects in this department yet.
+                      </p>
+                    )}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </div>
+
+          <Button type="submit" className="w-full">
+            Confirm Selection
+          </Button>
+        </form>
+      </div>
     </div>
   );
 }

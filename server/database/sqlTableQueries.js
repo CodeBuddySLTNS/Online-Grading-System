@@ -89,6 +89,19 @@ module.exports.sqlTableQueries = `
         FOREIGN KEY (subjectId) REFERENCES subjects(subjectId) ON DELETE CASCADE
     );
 
+    CREATE TABLE IF NOT EXISTS excelGrades (
+        excelGradeId INT AUTO_INCREMENT PRIMARY KEY,
+        teacherId INT NOT NULL,
+        departmentId INT NOT NULL,
+        yearLevel TINYINT NOT NULL CHECK (yearLevel BETWEEN 1 AND 4),
+        subjectId INT NOT NULL,
+        schoolYearId INT NOT NULL,
+        filePath VARCHAR(255) NOT NULL,
+        uploadDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (teacherId, departmentId, yearLevel, subjectId, schoolYearId)
+            REFERENCES teacherDepartmentSubjects(teacherId, departmentId, yearLevel, subjectId, schoolYearId) ON DELETE CASCADE
+    );
+
     CREATE TABLE IF NOT EXISTS grades (
         gradeId INT AUTO_INCREMENT PRIMARY KEY,
         studentId INT NOT NULL,
