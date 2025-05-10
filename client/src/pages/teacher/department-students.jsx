@@ -20,7 +20,7 @@ import { useMainStore } from "@/states/store";
 import NavigateBack from "@/components/back";
 
 export default function DepartmentStudents() {
-  const { departmentId, yearLevel, departmentShortName } = useParams();
+  const { departmentId, yearLevel, departmentShortName, sy } = useParams();
   const [studentsGrades, setStudentsGrades] = useState([]);
   const [subject, setSubject] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -30,7 +30,7 @@ export default function DepartmentStudents() {
   const { data: subjects } = useQuery({
     queryKey: ["subjects"],
     queryFn: coleAPI(
-      `/teachers/departmentsubjects?teacherId=${user.userId}&departmentId=${departmentId}&yearLevel=${yearLevel}`
+      `/teachers/departmentsubjects?teacherId=${user.userId}&departmentId=${departmentId}&yearLevel=${yearLevel}&schoolYearId=${sy}`
     ),
   });
 
@@ -76,7 +76,7 @@ export default function DepartmentStudents() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="flex justify-center px-4 py-8">
+      <main className="flex justify-center p-4 md:px-20">
         {subject ? (
           <div className="w-full flex flex-col justify-center items-center">
             <NavigateBack onBackFn={() => setSubject("")} />
@@ -88,7 +88,10 @@ export default function DepartmentStudents() {
                     <h1 className="text-lg md:text-xl font-semibold">
                       Students Grades ({departmentShortName}-{yearLevel})
                     </h1>
-                    <p className="text-sm">{subject.subjectName}</p>
+                    <p className="text-sm">
+                      {subject.subjectName} |{" "}
+                      {subject.semester == 1 ? "1st semester" : "2nd semester"}
+                    </p>
                   </div>
                 </div>
                 <ExcelUploader

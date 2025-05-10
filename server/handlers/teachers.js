@@ -13,12 +13,13 @@ const teachersById = async (req, res) => {
 };
 
 const departmentSubjects = async (req, res) => {
-  const { teacherId, departmentId, yearLevel } = req.query;
+  const { teacherId, departmentId, yearLevel, schoolYearId } = req.query;
 
   const teacher = await Teacher.getDepartmentSubjects(
     teacherId,
     departmentId,
-    yearLevel
+    yearLevel,
+    schoolYearId
   );
   res.send(teacher);
 };
@@ -27,12 +28,20 @@ const addTeacherDepartment = async (req, res) => {
   const { teacherId, departmentId, yearLevel, subjectId, schoolYearId } =
     req.body;
 
-  await Teacher.addTeacherDepartment(teacherId, departmentId, yearLevel);
+  console.log(req.body);
+
+  await Teacher.addTeacherDepartment(
+    teacherId,
+    departmentId,
+    yearLevel,
+    schoolYearId
+  );
   await Teacher.addTeacherDepartmentSubject(
     teacherId,
     departmentId,
     yearLevel,
-    subjectId
+    subjectId,
+    schoolYearId
   );
   res.send({ message: "Success!" });
 };

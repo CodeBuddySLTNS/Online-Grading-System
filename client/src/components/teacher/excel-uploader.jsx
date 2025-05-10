@@ -11,11 +11,48 @@ const ExcelUploader = ({ department, year, subject, setData }) => {
   const inputRef = useRef(null);
 
   const { mutateAsync: sendChangesToServer } = useMutation({
-    mutationFn: coleAPI("/", "POST"),
+    mutationFn: coleAPI("/grades/uploadexcel", "POST"),
+    onSuccess: () => {
+      toast("Success!", {
+        description: "Changes saved.",
+        style: {
+          fontSize: "1rem",
+          backgroundColor: "#d4edda",
+          color: "#155724",
+        },
+      });
+      setChanged(false);
+    },
+    onError: (e) => {
+      if (e.response?.data?.message) {
+        toast("Error!", {
+          description: e.response?.data?.message,
+          style: {
+            fontSize: "1rem",
+            backgroundColor: "#f8d7da",
+            color: "#721c24",
+          },
+        });
+      } else {
+        toast("Error!", {
+          description: "Unable to connect to the server.",
+          style: {
+            fontSize: "1rem",
+            backgroundColor: "#f8d7da",
+            color: "#721c24",
+          },
+        });
+      }
+    },
   });
 
   const saveChanges = async () => {
-    console.log(extractedData);
+    if (extractedData) {
+      sendChangesToServer({
+        excelData: extractedData,
+        fileName: `${department}-${year}-${subject.code}.xlsx`,
+      });
+    }
   };
 
   const handleUploadChange = (e) => {

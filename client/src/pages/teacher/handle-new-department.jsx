@@ -13,6 +13,7 @@ import { coleAPI } from "@/lib/utils";
 import { useMainStore } from "@/states/store";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 const years = [
   {
@@ -34,6 +35,7 @@ const years = [
 ];
 
 export default function TeacherDepartmentSelector() {
+  const { sy } = useParams();
   const [parameters, setParameters] = useState("");
   const user = useMainStore((state) => state.user);
 
@@ -103,6 +105,7 @@ export default function TeacherDepartmentSelector() {
       departmentId: Number(data.department),
       yearLevel: Number(data.year),
       subjectId: Number(data.subjectId),
+      schoolYearId: Number(sy),
     };
 
     try {

@@ -87,7 +87,7 @@ const Teacher = {
     return Object.values(grouped)[0];
   },
 
-  getDepartmentSubjects: async (teacherId, departmentId, yearLevel) => {
+  getDepartmentSubjects: async (teacherId, departmentId, yearLevel, sy) => {
     const query = `SELECT s.*, ds.semester 
       FROM teacherDepartmentSubjects tds
       JOIN departmentSubjects ds 
@@ -98,11 +98,17 @@ const Teacher = {
         ON tds.subjectId = s.subjectId
       WHERE tds.teacherId = ? 
         AND tds.departmentId = ? 
-        AND tds.yearLevel = ?`;
-    return await sqlQuery(query, [teacherId, departmentId, yearLevel]);
+        AND tds.yearLevel = ?
+        AND tds.schoolYearId = ?`;
+    return await sqlQuery(query, [teacherId, departmentId, yearLevel, sy]);
   },
 
-  addTeacherDepartment: async (teacherId, departmentId, yearLevel) => {
+  addTeacherDepartment: async (
+    teacherId,
+    departmentId,
+    yearLevel,
+    schoolYearId
+  ) => {
     const query = `
       INSERT IGNORE INTO teacherDepartments (teacherId, departmentId, yearLevel, schoolYearId)
       VALUES (?, ?, ?, ?)
