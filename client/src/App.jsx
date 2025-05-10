@@ -8,7 +8,7 @@ import { useMainStore } from "./states/store";
 import LoggedIn from "./pages/logged-in";
 import TeacherDepartmentSelector from "./pages/teacher/handle-new-department";
 import DepartmentStudents from "./pages/teacher/department-students";
-import { CourseTable } from "./pages/teacher/courses-table";
+import PageWrapper from "./pages/page-wrapper";
 
 const App = () => {
   const isLoggedIn = useMainStore((state) => state.isLoggedIn);
@@ -49,14 +49,29 @@ const App = () => {
         <Router>
           <Routes>
             <Route path="/" element={<LoggedIn />} />
-            <Route path="/teacher" element={<TeachersPage />} />
+            <Route
+              path="/teacher"
+              element={
+                <PageWrapper>
+                  <TeachersPage />
+                </PageWrapper>
+              }
+            />
             <Route
               path="/teacher/newdepartment"
-              element={<TeacherDepartmentSelector />}
+              element={
+                <PageWrapper>
+                  <TeacherDepartmentSelector />
+                </PageWrapper>
+              }
             />
             <Route
               path="/teacher/subjects/students/:departmentId/:yearLevel/:departmentShortName"
-              element={<DepartmentStudents />}
+              element={
+                <PageWrapper>
+                  <DepartmentStudents />
+                </PageWrapper>
+              }
             />
           </Routes>
         </Router>

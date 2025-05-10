@@ -114,17 +114,19 @@ const Teacher = {
     teacherId,
     departmentId,
     yearLevel,
-    subjectId
+    subjectId,
+    schoolYearId
   ) => {
     const query = `
-      INSERT INTO teacherDepartmentSubjects (teacherId, departmentId, yearLevel, subjectId)
-      VALUES (?, ?, ?, ?)
+      INSERT INTO teacherDepartmentSubjects (teacherId, departmentId, yearLevel, subjectId, schoolYearId)
+      VALUES (?, ?, ?, ?, ?)
     `;
     return await sqlQuery(query, [
       teacherId,
       departmentId,
       yearLevel,
       subjectId,
+      schoolYearId,
     ]);
   },
 };

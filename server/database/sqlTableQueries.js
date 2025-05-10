@@ -60,11 +60,13 @@ module.exports.sqlTableQueries = `
 
     CREATE TABLE IF NOT EXISTS teacherDepartmentSubjects (
         teacherId INT NOT NULL,
+        subjectId INT NOT NULL,
         departmentId INT NOT NULL,
         yearLevel TINYINT NOT NULL CHECK (yearLevel BETWEEN 1 AND 4),
-        subjectId INT NOT NULL,
+        schoolYearId INT NOT NULL,
         PRIMARY KEY (teacherId, departmentId, yearLevel, subjectId),
         FOREIGN KEY (teacherId, departmentId, yearLevel)
+        FOREIGN KEY (schoolYearId) REFERENCES schoolYears(schoolYearId) ON DELETE CASCADE,
         REFERENCES teacherDepartments(teacherId, departmentId, yearLevel) ON DELETE CASCADE,
         FOREIGN KEY (subjectId) REFERENCES subjects(subjectId) ON DELETE CASCADE
     );

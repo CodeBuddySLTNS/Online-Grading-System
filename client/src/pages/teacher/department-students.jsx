@@ -83,15 +83,19 @@ export default function DepartmentStudents() {
             <Card className="w-full max-w-5xl shadow-lg rounded-2xl gap-4">
               <CardHeader className="flex justify-between">
                 <div className="flex items-center gap-2">
-                  <User className="w-5 h-5 text-primary" />
-                  <h1 className="text-lg sm:text-xl font-semibold">
-                    Students Grades ({departmentShortName}-{yearLevel})
-                  </h1>
+                  <User className="w-6 h-6 text-primary" />
+                  <div>
+                    <h1 className="text-lg md:text-xl font-semibold">
+                      Students Grades ({departmentShortName}-{yearLevel})
+                    </h1>
+                    <p className="text-sm">{subject.subjectName}</p>
+                  </div>
                 </div>
                 <ExcelUploader
                   setData={setStudentsGrades}
                   department={departmentShortName}
                   year={yearLevel}
+                  subject={subject}
                 />
               </CardHeader>
               <CardContent>
