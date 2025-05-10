@@ -54,7 +54,6 @@ const App = () => {
               path="/teacher/newdepartment"
               element={<TeacherDepartmentSelector />}
             />
-            <Route path="/teacher/subjects" element={<CourseTable />} />
             <Route
               path="/teacher/subjects/students/:departmentId/:yearLevel/:departmentShortName"
               element={<DepartmentStudents />}

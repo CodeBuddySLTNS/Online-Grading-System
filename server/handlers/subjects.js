@@ -34,7 +34,6 @@ const departmentSubjects = async (req, res) => {
     yearLevel
   );
 
-  console.log(departmentSubjects);
   res.send(departmentSubjects);
 };
 

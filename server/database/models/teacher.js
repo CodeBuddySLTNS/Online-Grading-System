@@ -87,6 +87,21 @@ const Teacher = {
     return Object.values(grouped)[0];
   },
 
+  getDepartmentSubjects: async (teacherId, departmentId, yearLevel) => {
+    const query = `SELECT s.*, ds.semester 
+      FROM teacherDepartmentSubjects tds
+      JOIN departmentSubjects ds 
+        ON tds.departmentId = ds.departmentId 
+        AND tds.yearLevel = ds.yearLevel 
+        AND tds.subjectId = ds.subjectId
+      JOIN subjects s 
+        ON tds.subjectId = s.subjectId
+      WHERE tds.teacherId = ? 
+        AND tds.departmentId = ? 
+        AND tds.yearLevel = ?`;
+    return await sqlQuery(query, [teacherId, departmentId, yearLevel]);
+  },
+
   addTeacherDepartment: async (teacherId, departmentId, yearLevel) => {
     const query = `
       INSERT IGNORE INTO teacherDepartments (teacherId, departmentId, yearLevel)
