@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { coleAPI } from "@/lib/utils";
 import Joi from "joi";
 import { joiResolver } from "@hookform/resolvers/joi";
@@ -14,20 +14,17 @@ const schema = Joi.object({
 });
 
 const AddSchoolYear = () => {
-  const queryClient = useQueryClient();
-
   const { mutateAsync: addSchoolYear } = useMutation({
-    mutationFn: coleAPI("/registrar/sy", "POST"),
+    mutationFn: coleAPI("/registrar/addsy", "POST"),
     onSuccess: () => {
       toast("Success!", {
-        description: "Subject added successfully.",
+        description: "School Year added successfully.",
         style: {
           fontSize: "1rem",
           backgroundColor: "#d4edda",
           color: "#155724",
         },
       });
-      queryClient.invalidateQueries(["subjects"]);
       reset();
     },
     onError: (e) => {
@@ -64,7 +61,6 @@ const AddSchoolYear = () => {
 
   const onSubmit = async (data) => {
     try {
-      console.log(data);
       await addSchoolYear(data);
     } catch (error) {
       console.log(error);

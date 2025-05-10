@@ -37,9 +37,25 @@ module.exports.sqlTableQueries = `
         teacherId INT NOT NULL,
         departmentId INT NOT NULL,
         yearLevel TINYINT NOT NULL CHECK (yearLevel BETWEEN 1 AND 4),
-        PRIMARY KEY (teacherId, departmentId, yearLevel),
+        schoolYearId INT NOT NULL,
+        PRIMARY KEY (teacherId, departmentId, yearLevel, schoolYearId),
         FOREIGN KEY (teacherId) REFERENCES teachers(teacherId) ON DELETE CASCADE,
-        FOREIGN KEY (departmentId) REFERENCES departments(departmentId) ON DELETE CASCADE
+        FOREIGN KEY (departmentId) REFERENCES departments(departmentId) ON DELETE CASCADE,
+        FOREIGN KEY (schoolYearId) REFERENCES schoolYears(schoolYearId) ON DELETE CASCADE
+    );
+
+    
+    CREATE TABLE IF NOT EXISTS teacherDepartmentSubjects (
+        teacherId INT NOT NULL,
+        subjectId INT NOT NULL,
+        departmentId INT NOT NULL,
+        yearLevel TINYINT NOT NULL CHECK (yearLevel BETWEEN 1 AND 4),
+        schoolYearId INT NOT NULL,
+        PRIMARY KEY (teacherId, departmentId, yearLevel, subjectId, schoolYearId),
+        FOREIGN KEY (teacherId, departmentId, yearLevel)
+        REFERENCES teacherDepartments(teacherId, departmentId, yearLevel) ON DELETE CASCADE,
+        FOREIGN KEY (subjectId) REFERENCES subjects(subjectId) ON DELETE CASCADE,
+        FOREIGN KEY (schoolYearId) REFERENCES schoolYears(schoolYearId) ON DELETE CASCADE
     );
 
     CREATE TABLE IF NOT EXISTS subjects (
@@ -55,19 +71,6 @@ module.exports.sqlTableQueries = `
         semester TINYINT NOT NULL CHECK (semester IN (1, 2)),
         PRIMARY KEY (departmentId, subjectId),
         FOREIGN KEY (departmentId) REFERENCES departments(departmentId) ON DELETE CASCADE,
-        FOREIGN KEY (subjectId) REFERENCES subjects(subjectId) ON DELETE CASCADE
-    );
-
-    CREATE TABLE IF NOT EXISTS teacherDepartmentSubjects (
-        teacherId INT NOT NULL,
-        subjectId INT NOT NULL,
-        departmentId INT NOT NULL,
-        yearLevel TINYINT NOT NULL CHECK (yearLevel BETWEEN 1 AND 4),
-        schoolYearId INT NOT NULL,
-        PRIMARY KEY (teacherId, departmentId, yearLevel, subjectId),
-        FOREIGN KEY (teacherId, departmentId, yearLevel)
-        FOREIGN KEY (schoolYearId) REFERENCES schoolYears(schoolYearId) ON DELETE CASCADE,
-        REFERENCES teacherDepartments(teacherId, departmentId, yearLevel) ON DELETE CASCADE,
         FOREIGN KEY (subjectId) REFERENCES subjects(subjectId) ON DELETE CASCADE
     );
 

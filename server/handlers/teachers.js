@@ -8,6 +8,7 @@ const teachers = async (req, res) => {
 const teachersById = async (req, res) => {
   const teacherId = req.query.id;
   const teacher = await Teacher.getTeacherById(teacherId);
+  console.log(teacher);
   res.send(teacher);
 };
 
@@ -23,7 +24,8 @@ const departmentSubjects = async (req, res) => {
 };
 
 const addTeacherDepartment = async (req, res) => {
-  const { teacherId, departmentId, yearLevel, subjectId } = req.body;
+  const { teacherId, departmentId, yearLevel, subjectId, schoolYearId } =
+    req.body;
 
   await Teacher.addTeacherDepartment(teacherId, departmentId, yearLevel);
   await Teacher.addTeacherDepartmentSubject(

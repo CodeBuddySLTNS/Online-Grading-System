@@ -104,10 +104,15 @@ const Teacher = {
 
   addTeacherDepartment: async (teacherId, departmentId, yearLevel) => {
     const query = `
-      INSERT IGNORE INTO teacherDepartments (teacherId, departmentId, yearLevel)
-      VALUES (?, ?, ?)
+      INSERT IGNORE INTO teacherDepartments (teacherId, departmentId, yearLevel, schoolYearId)
+      VALUES (?, ?, ?, ?)
     `;
-    return await sqlQuery(query, [teacherId, departmentId, yearLevel]);
+    return await sqlQuery(query, [
+      teacherId,
+      departmentId,
+      yearLevel,
+      schoolYearId,
+    ]);
   },
 
   addTeacherDepartmentSubject: async (

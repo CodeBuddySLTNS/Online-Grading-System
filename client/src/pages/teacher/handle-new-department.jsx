@@ -48,7 +48,7 @@ export default function TeacherDepartmentSelector() {
     queryKey: ["departmentSubjects"],
     queryFn: coleAPI("/subjects/departmentsubjects" + parameters),
   });
-  console.log(departmentSubjects);
+
   const { mutateAsync: handleDepartment } = useMutation({
     mutationFn: coleAPI(`/teachers/teacher/newdepartment`, "POST"),
     onSuccess: () => {

@@ -15,6 +15,7 @@ app.use((req, res, next) => (console.log(req.path, req.method), next()));
 app.use("/auth", require("./routes/auth"));
 app.use("/users", require("./routes/users"));
 app.use("/teachers", require("./routes/teachers"));
+app.use("/registrar", require("./routes/registrar"));
 app.use("/students", require("./routes/students"));
 app.use("/subjects", require("./routes/subjects"));
 app.use("/departments", require("./routes/departments"));
