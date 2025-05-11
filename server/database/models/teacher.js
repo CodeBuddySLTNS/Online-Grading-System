@@ -42,22 +42,23 @@ const Teacher = {
     return Object.values(grouped);
   },
 
-  getTeacherById: async (teacherId) => {
+  getTeacherById: async (teacherId, schoolYearId) => {
     const query = `
       SELECT 
         t.teacherId, 
         CONCAT(u.firstName, ' ', u.lastName) AS teacherName, 
         d.departmentId, 
         d.departmentName, 
-        d.shortName, 
+        d.shortName,
         td.yearLevel
       FROM teachers t
       JOIN users u ON t.teacherId = u.userId
-      LEFT JOIN teacherDepartments td ON t.teacherId = td.teacherId
+      LEFT JOIN teacherDepartments td ON t.teacherId = td.teacherId AND td.schoolYearId = ?
       LEFT JOIN departments d ON td.departmentId = d.departmentId
       WHERE t.teacherId = ?
     `;
-    const results = await sqlQuery(query, [teacherId]);
+    console.log(schoolYearId);
+    const results = await sqlQuery(query, [schoolYearId, teacherId]);
 
     const grouped = results.reduce((acc, row) => {
       const {

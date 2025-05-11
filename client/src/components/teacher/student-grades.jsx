@@ -24,7 +24,7 @@ const StudentGrades = ({
   });
 
   useEffect(() => {
-    if (excelData) {
+    if (excelData && setData) {
       setData(excelData);
     }
   }, [excelData, setData]);

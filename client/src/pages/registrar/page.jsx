@@ -17,13 +17,16 @@ export function RegistrarDashboard() {
     <div className="min-h-screen bg-background">
       <Header />
       <main className="max-w-6xl mx-auto px-4 py-8 mb-16">
-        <div className="mb-6 px-2">
-          <h2 className="text-2xl font-bold tracking-tight text-primary">
-            Welcome, Registrar!
-          </h2>
-          <p className="text-muted-foreground text-sm">
-            Manage student records and approval requests below.
-          </p>
+        <div className="flex flex-wrap justify-between mb-6 gap-3">
+          <div className="md:px-2">
+            <h2 className="text-2xl font-bold tracking-tight text-primary">
+              Welcome, Registrar!
+            </h2>
+            <p className="text-muted-foreground text-sm">
+              Manage student records and approval requests below.
+            </p>
+          </div>
+          <AddSchoolYear />
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2">
@@ -60,9 +63,6 @@ export function RegistrarDashboard() {
         <div className="w-full grid gap-6 md:grid-cols-2">
           <InsertSubjectForm />
           <InsertDepartmentSubjectForm />
-        </div>
-        <div className="mt-8 flex justify-center">
-          <AddSchoolYear />
         </div>
       </main>
     </div>

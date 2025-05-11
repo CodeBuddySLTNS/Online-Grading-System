@@ -9,9 +9,9 @@ export default function DepartmentsPage({ sy }) {
   const user = useMainStore((state) => state.user);
   const { data } = useQuery({
     queryKey: ["teacherDepartments"],
-    queryFn: coleAPI("/teachers/teacher?id=" + user.userId),
+    queryFn: coleAPI(`/teachers/teacher?id=${user.userId}&sy=${sy}`),
   });
-
+  console.log(data);
   return (
     <div className="space-y-8">
       {Object.entries(data?.departments || {}).length > 0 ? (

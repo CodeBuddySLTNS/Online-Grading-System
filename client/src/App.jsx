@@ -49,14 +49,7 @@ const App = () => {
         <Router>
           <Routes>
             <Route path="/" element={<LoggedIn />} />
-            <Route
-              path="/teacher"
-              element={
-                <PageWrapper>
-                  <TeachersPage />
-                </PageWrapper>
-              }
-            />
+
             <Route
               path="/teacher/newdepartment/:sy"
               element={
@@ -67,6 +60,15 @@ const App = () => {
             />
             <Route
               path="/teacher/subjects/students/:sy/:departmentShortName/:yearLevel/:departmentId"
+              element={
+                <PageWrapper>
+                  <DepartmentStudents />
+                </PageWrapper>
+              }
+            />
+
+            <Route
+              path="/registrar"
               element={
                 <PageWrapper>
                   <DepartmentStudents />

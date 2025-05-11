@@ -6,8 +6,8 @@ const teachers = async (req, res) => {
 };
 
 const teachersById = async (req, res) => {
-  const teacherId = req.query.id;
-  const teacher = await Teacher.getTeacherById(teacherId);
+  const { id: teacherId, sy: schoolYearId } = req.query;
+  const teacher = await Teacher.getTeacherById(teacherId, schoolYearId);
   console.log(teacher);
   res.send(teacher);
 };

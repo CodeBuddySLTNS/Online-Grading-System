@@ -1,19 +1,38 @@
 import { useForm } from "react-hook-form";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useMutation } from "@tanstack/react-query";
 import { coleAPI } from "@/lib/utils";
 import Joi from "joi";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { toast } from "sonner";
+import { useState } from "react";
 
 const schema = Joi.object({
   schoolYearName: Joi.string().label("School Year").required(),
 });
 
-const AddSchoolYear = () => {
+export default function AddSchoolYearDialog() {
+  const [open, setOpen] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: joiResolver(schema),
+  });
+
   const { mutateAsync: addSchoolYear } = useMutation({
     mutationFn: coleAPI("/registrar/addsy", "POST"),
     onSuccess: () => {
@@ -26,77 +45,61 @@ const AddSchoolYear = () => {
         },
       });
       reset();
+      setOpen(false);
     },
     onError: (e) => {
-      if (e.response?.data?.message) {
-        toast("Error!", {
-          description: e.response?.data?.message,
-          style: {
-            fontSize: "1rem",
-            backgroundColor: "#f8d7da",
-            color: "#721c24",
-          },
-        });
-      } else {
-        toast("Error!", {
-          description: "Unable to connect to the server.",
-          style: {
-            fontSize: "1rem",
-            backgroundColor: "#f8d7da",
-            color: "#721c24",
-          },
-        });
-      }
+      const description =
+        e?.response?.data?.message || "Unable to connect to the server.";
+      toast("Error!", {
+        description,
+        style: {
+          fontSize: "1rem",
+          backgroundColor: "#f8d7da",
+          color: "#721c24",
+        },
+      });
     },
-  });
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm({
-    resolver: joiResolver(schema),
   });
 
   const onSubmit = async (data) => {
     try {
       await addSchoolYear(data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
   return (
-    <Card className="w-full md:w-[60%]  mx-auto shadow-lg rounded-2xl gap-3">
-      <CardHeader>
-        <h2 className="text-xl font-bold">Add New School Year</h2>
-      </CardHeader>
-      <CardContent className="h-full">
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="h-full flex flex-col gap-6"
-        >
-          <div className="flex-1 flex flex-col gap-4">
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="schoolYearName">School Year</Label>
-              <Input
-                id="schoolYearName"
-                {...register("schoolYearName")}
-                placeholder="S.Y. 2024-2025"
-              />
-              {errors.subjectName && (
-                <p className="text-sm text-red-500">
-                  {errors.schoolYearName.message}
-                </p>
-              )}
-            </div>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="default">Add School Year</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="text-center">Add New School Year</DialogTitle>
+          <DialogDescription className="text-center">
+            This will be used across student records and reporting.
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="schoolYearName">School Year</Label>
+            <Input
+              id="schoolYearName"
+              {...register("schoolYearName")}
+              placeholder="S.Y. 2024-2025"
+            />
+            {errors.schoolYearName && (
+              <p className="text-sm text-red-500">
+                {errors.schoolYearName.message}
+              </p>
+            )}
           </div>
-          <Button type="submit">Submit</Button>
+          <div className="flex justify-end">
+            <Button type="submit">Submit</Button>
+          </div>
         </form>
-      </CardContent>
-    </Card>
+      </DialogContent>
+    </Dialog>
   );
-};
-
-export default AddSchoolYear;
+}
