@@ -91,6 +91,7 @@ export default function DepartmentStudents() {
                   </div>
                 </div>
                 <ExcelUploader
+                  data={studentsGrades}
                   setData={setStudentsGrades}
                   departmentId={departmentId}
                   department={departmentShortName}

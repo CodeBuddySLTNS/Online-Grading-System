@@ -29,6 +29,10 @@ const StudentGrades = ({
     }
   }, [excelData, setData]);
 
+  useEffect(() => {
+    return () => setData([]);
+  }, []);
+
   return (
     <>
       {studentsGrades.length > 0 ? (

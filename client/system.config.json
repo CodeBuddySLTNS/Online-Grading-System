@@ -1,5 +1,5 @@
 {
-  "isProduction": true,
+  "isProduction": false,
   "prodServer": "http://10.102.4.161:4000",
   "devServer": "http://localhost:4000"
 }

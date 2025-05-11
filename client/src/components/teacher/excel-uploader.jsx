@@ -12,10 +12,10 @@ const ExcelUploader = ({
   year,
   subject,
   sy,
+  data,
   setData,
 }) => {
   const [changed, setChanged] = useState(false);
-  const [extractedData, setExtractedData] = useState(null);
   const user = useMainStore((state) => state.user);
   const inputRef = useRef(null);
 
@@ -56,14 +56,14 @@ const ExcelUploader = ({
   });
 
   const saveChanges = async () => {
-    if (extractedData) {
+    if (data) {
       const body = {
         teacherId: user.userId,
         departmentId: Number(departmentId),
         yearLevel: Number(year),
         subjectId: subject.subjectId,
         schoolYearId: Number(sy),
-        excelData: extractedData,
+        excelData: data,
         fileName: `${department}-${year}-${subject.code}.xlsx`,
       };
       await sendChangesToServer(body);
@@ -91,7 +91,6 @@ const ExcelUploader = ({
             { header: 1 }
           );
           setData(jsonData);
-          setExtractedData(jsonData);
         };
 
         reader.readAsArrayBuffer(file);
@@ -125,7 +124,7 @@ const ExcelUploader = ({
       />
       <div className="flex flex-col gap-0.5">
         <Button size="sm" onClick={handleUpload}>
-          Upload excel file
+          {data?.length === 0 ? "Upload excel file" : "Replace excel file"}
         </Button>
         {changed && (
           <Button

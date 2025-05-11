@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LandingPage from "./pages/landing-page";
-import TeachersPage from "./pages/teacher/page";
 import { useQuery } from "@tanstack/react-query";
 import { coleAPI } from "./lib/utils";
 import { useEffect } from "react";
@@ -9,6 +8,8 @@ import LoggedIn from "./pages/logged-in";
 import TeacherDepartmentSelector from "./pages/teacher/handle-new-department";
 import DepartmentStudents from "./pages/teacher/department-students";
 import PageWrapper from "./pages/page-wrapper";
+import ApprovalPage from "./pages/registrar/waiting-for-approval";
+import StudentRecords from "./pages/registrar/student-records";
 
 const App = () => {
   const isLoggedIn = useMainStore((state) => state.isLoggedIn);
@@ -68,10 +69,18 @@ const App = () => {
             />
 
             <Route
-              path="/registrar"
+              path="/registrar/student-records"
               element={
                 <PageWrapper>
-                  <DepartmentStudents />
+                  <StudentRecords />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path="/registrar/waiting-for-approval"
+              element={
+                <PageWrapper>
+                  <ApprovalPage />
                 </PageWrapper>
               }
             />

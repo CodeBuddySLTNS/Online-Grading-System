@@ -31,7 +31,7 @@ export function RegistrarDashboard() {
 
         <div className="grid gap-6 sm:grid-cols-2">
           <Card
-            className="hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+            className="hover:shadow-lg transition-shadow duration-300 cursor-pointer"
             onClick={() => navigate("/registrar/student-records")}
           >
             <CardHeader className="flex items-center gap-2">
@@ -45,7 +45,7 @@ export function RegistrarDashboard() {
           </Card>
 
           <Card
-            className="hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+            className="hover:shadow-lg transition-shadow duration-300 cursor-pointer"
             onClick={() => navigate("/registrar/waiting-for-approval")}
           >
             <CardHeader className="flex items-center gap-2">

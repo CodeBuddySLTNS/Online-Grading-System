@@ -17,7 +17,7 @@ module.exports.sqlTableQueries = `
 
     CREATE TABLE IF NOT EXISTS schoolYears (
         schoolYearId INT AUTO_INCREMENT PRIMARY KEY,
-        schoolYearName VARCHAR(20) NOT NULL
+        schoolYearName VARCHAR(20) NOT NULL UNIQUE
     );
 
     CREATE TABLE IF NOT EXISTS students (
@@ -52,10 +52,9 @@ module.exports.sqlTableQueries = `
         yearLevel TINYINT NOT NULL CHECK (yearLevel BETWEEN 1 AND 4),
         schoolYearId INT NOT NULL,
         PRIMARY KEY (teacherId, departmentId, yearLevel, subjectId, schoolYearId),
-        FOREIGN KEY (teacherId, departmentId, yearLevel)
-        REFERENCES teacherDepartments(teacherId, departmentId, yearLevel) ON DELETE CASCADE,
-        FOREIGN KEY (subjectId) REFERENCES subjects(subjectId) ON DELETE CASCADE,
-        FOREIGN KEY (schoolYearId) REFERENCES schoolYears(schoolYearId) ON DELETE CASCADE
+        FOREIGN KEY (teacherId, departmentId, yearLevel, schoolYearId)
+        REFERENCES teacherDepartments(teacherId, departmentId, yearLevel, schoolYearId) ON DELETE CASCADE,
+        FOREIGN KEY (subjectId) REFERENCES subjects(subjectId) ON DELETE CASCADE
     );
 
     CREATE TABLE IF NOT EXISTS subjects (

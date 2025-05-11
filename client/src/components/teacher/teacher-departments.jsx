@@ -4,18 +4,33 @@ import { useQuery } from "@tanstack/react-query";
 import { coleAPI, yearLevelText } from "@/lib/utils";
 import { useMainStore } from "@/states/store";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 export default function DepartmentsPage({ sy }) {
   const user = useMainStore((state) => state.user);
+  const [departments, setDepartments] = useState({ loading: true, data: [] });
+
   const { data } = useQuery({
     queryKey: ["teacherDepartments"],
     queryFn: coleAPI(`/teachers/teacher?id=${user.userId}&sy=${sy}`),
   });
-  console.log(data);
+
+  useEffect(() => {
+    if (data)
+      setDepartments({
+        loading: false,
+        data: Object.entries(data.departments || {}),
+      });
+  }, [data]);
+
+  useEffect(() => {
+    return () => setDepartments({ loading: true, data: [] });
+  }, []);
+
   return (
     <div className="space-y-8">
-      {Object.entries(data?.departments || {}).length > 0 ? (
-        Object.entries(data?.departments || {}).map(([yearLevel, deptList]) => (
+      {departments.data.length > 0 ? (
+        departments.data.map(([yearLevel, deptList]) => (
           <div key={yearLevel}>
             <h2 className="text-xl font-semibold mb-4">
               {yearLevelText(yearLevel)}
@@ -45,6 +60,10 @@ export default function DepartmentsPage({ sy }) {
             </div>
           </div>
         ))
+      ) : departments.loading ? (
+        <div className="flex justify-center items-center">
+          <div className="loader mt-16"></div>
+        </div>
       ) : (
         <div>No departments handled.</div>
       )}
