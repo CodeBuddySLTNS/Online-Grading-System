@@ -62,6 +62,30 @@ const uploadexcel = async (req, res) => {
   res.send({ message: "Changes saved successfully.", result });
 };
 
+const getAllExcelGrades = async (req, res) => {
+  const query = `SELECT CONCAT(u.firstName, ' ', u.lastName) AS teacher, 
+    d.departmentName as department, d.shortName as departmentShort,
+    eg.yearLevel, sy.schoolYearName as schoolYear,
+    eg.filePath, eg.uploadDate
+    FROM excelGrades eg
+    JOIN users u ON u.userId = eg.teacherId
+    JOIN schoolYears sy ON sy.schoolYearId = eg.schoolYearId
+    JOIN departments d ON d.departmentId = eg.departmentId`;
+  const excelGrades = await sqlQuery(query);
+
+  const allGrades = excelGrades.map((eg) => {
+    const wb = XLSX.readFile(eg.filePath);
+    const ws = wb.Sheets[wb.SheetNames[0]];
+    const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
+
+    const grades = { ...eg, data };
+    delete grades.filePath;
+    return grades;
+  });
+
+  res.send(allGrades);
+};
+
 const getExcelGrade = async (req, res) => {
   const data = await getExcelGradesByTeacherDepartmentSubject(req.query);
 
@@ -127,5 +151,6 @@ const getExcelGradesByTeacherDepartmentSubject = async (data) => {
 module.exports = {
   grades,
   uploadexcel,
+  getAllExcelGrades,
   getExcelGrade,
 };

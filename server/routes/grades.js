@@ -5,6 +5,7 @@ const router = require("express").Router();
 
 router.get("/", tryCatch(handler.grades));
 router.post("/uploadexcel", tryCatch(handler.uploadexcel));
+router.get("/excelgrades", tryCatch(handler.getAllExcelGrades));
 router.get("/excelgrade", tryCatch(handler.getExcelGrade));
 
 module.exports = router;
