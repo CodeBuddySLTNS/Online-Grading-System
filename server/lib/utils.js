@@ -9,7 +9,7 @@ const tryCatch = (handler) => async (req, res, next) => {
 };
 
 const generateToken = (payload, expiration) => {
-  const defaultExpiration = 12 * 60 * 60 * 1000;
+  const defaultExpiration = 12 * 60 * 60;
   const secretKey = process.env.SYSTEM_SECRET_KEY;
   return jwt.sign(payload, secretKey, {
     expiresIn: expiration || defaultExpiration,

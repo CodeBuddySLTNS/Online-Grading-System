@@ -47,13 +47,13 @@ const excelGrades = async (req, res) => {
 };
 
 const excelGrade = async (req, res) => {
-  let filePath;
   const { teacherId, departmentId, yearLevel, subjectId, schoolYearId, id } =
     req.query;
 
+  let excelGrade;
+
   if (id) {
-    const excelGrade = await Grades.getExcelGradesById(id);
-    filePath = excelGrade.filePath;
+    excelGrade = await Grades.getExcelGradesById(id);
   } else {
     if (
       !teacherId ||
@@ -67,21 +67,18 @@ const excelGrade = async (req, res) => {
         status.BAD_REQUEST
       );
 
-    let excelGradeId = (await Grades.getExcelGradesByDepartment(req.query))
-      ?.excelGradeId;
-
-    if (!excelGradeId) {
-      return res.send([]);
-    }
-
-    const excelGrade = await Grades.getExcelGradesById(excelGradeId);
-    filePath = excelGrade.filePath;
+    excelGrade = await Grades.getExcelGradesByDepartment(req.query);
   }
 
-  const workbook = XLSX.readFile(filePath);
+  if (!excelGrade) {
+    return res.send({ data: [] });
+  }
+
+  const workbook = XLSX.readFile(excelGrade.filePath);
   const worksheet = workbook.Sheets[workbook.SheetNames[0]];
   const data = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-  res.send(data);
+  delete excelGrade.filePath;
+  res.send({ ...excelGrade, data });
 };
 
 module.exports = {
