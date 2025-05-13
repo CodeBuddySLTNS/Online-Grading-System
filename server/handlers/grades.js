@@ -29,14 +29,14 @@ const uploadexcel = async (req, res) => {
     throw new CustomError(errorMessage, status.BAD_REQUEST);
   }
 
-  const filePath = "./excel-files/" + fileName;
+  const filePath = "./excel-files/" + value.fileName;
 
-  const ws = XLSX.utils.aoa_to_sheet(excelData);
+  const ws = XLSX.utils.aoa_to_sheet(value.excelData);
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
   await XLSX.writeFile(wb, filePath);
 
-  const result = await Grades.addExcelGrade(value);
+  const result = await Grades.addExcelGrade({ ...value, filePath });
 
   res.send({ message: "Changes saved successfully.", result });
 };

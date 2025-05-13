@@ -9,10 +9,14 @@ const PageWrapper = ({ children }) => {
 
   useEffect(() => {
     if (
-      location.pathname.startsWith("/teacher") &&
-      (user?.role === "admin" ||
-        user?.role === "student" ||
-        user?.role === "registrar")
+      (location.pathname.startsWith("/teacher") &&
+        (user?.role === "admin" ||
+          user?.role === "student" ||
+          user?.role === "registrar")) ||
+      (location.pathname.startsWith("/registrar") &&
+        (user?.role === "admin" ||
+          user?.role === "student" ||
+          user?.role === "teacher"))
     ) {
       navigate("/");
     }

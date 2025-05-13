@@ -96,8 +96,9 @@ module.exports.sqlTableQueries = `
         subjectId INT NOT NULL,
         schoolYearId INT NOT NULL,
         filePath VARCHAR(255) NOT NULL,
-        isApproved BOOlEAN DEFAULT false,
+        isApproved BOOLEAN DEFAULT false,
         uploadDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        UNIQUE KEY uniqueExcelGrade (teacherId, departmentId, yearLevel, subjectId, schoolYearId),
         FOREIGN KEY (teacherId, departmentId, yearLevel, subjectId, schoolYearId)
             REFERENCES teacherDepartmentSubjects(teacherId, departmentId, yearLevel, subjectId, schoolYearId) ON DELETE CASCADE
     );

@@ -76,7 +76,7 @@ const ExcelUploader = ({
 
     if (file?.name.endsWith(".xlsx")) {
       const nameArray = file.name.slice(0, -5).split("-");
-      console.log(nameArray);
+
       if (
         nameArray[0].toUpperCase().trim() === department &&
         nameArray[1].trim() === year &&

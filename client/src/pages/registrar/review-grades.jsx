@@ -3,7 +3,7 @@ import { Header } from "@/components/header";
 import { SortablePaginatedTable } from "@/components/sortable-paginated-table";
 import { Button } from "@/components/ui/button";
 import { coleAPI } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { CheckCircle, FileText } from "lucide-react";
 import { useParams } from "react-router-dom";
 
@@ -15,10 +15,22 @@ const ReviewGrades = () => {
     queryFn: coleAPI(`/grades/excelgrade?id=${excelGradeId}`),
   });
 
+  const { mutateAsync: approve } = useMutation({
+    mutationFn: coleAPI("/grades/excelgrades/approve"),
+  });
+
+  const handleApprove = async () => {
+    try {
+      await approve(grades.excelGradeId);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="px-4 py-6 max-w-6xl mx-auto">
+      <div className="p-4 max-w-6xl mx-auto">
         <NavigateBack />
         <div className="p-4 border rounded-lg shadow-sm bg-white dark:bg-muted mt-4">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
@@ -26,15 +38,23 @@ const ReviewGrades = () => {
               <FileText className="w-6 h-6 text-primary shrink-0" />
               <div>
                 <h1 className="text-lg md:text-xl font-semibold leading-snug">
-                  Grade Review ({grades?.departmentShort}-{grades?.yearLevel})
+                  Grade Review{" "}
+                  {grades?.departmentShort &&
+                    `(${grades.departmentShort}-${grades.yearLevel})`}
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                  {grades?.subject} |{" "}
-                  {grades?.semester == 1 ? "1st Semester" : "2nd Semester"}
+                  {grades?.subject &&
+                    `${grades?.subject} | ${
+                      grades?.semester == 1 ? "1st Semester" : "2nd Semester"
+                    }`}
                 </p>
               </div>
             </div>
-            <Button className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 text-sm md:text-base font-medium shadow-md bg-green-700 hover:bg-green-500">
+            <Button
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 text-sm md:text-base font-medium shadow-md bg-green-700 hover:bg-green-500"
+              disabled={grades?.isApproved || !grades?.subject}
+              onClick={handleApprove}
+            >
               <CheckCircle className="w-4 h-4 md:w-5 md:h-5" />
               <span>Approve</span>
             </Button>

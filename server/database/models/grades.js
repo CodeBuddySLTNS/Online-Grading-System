@@ -7,10 +7,14 @@ const Grades = {
     yearLevel,
     subjectId,
     schoolYearId,
+    filePath,
   }) => {
-    const query = `INSERT INTO excelGrades 
-    (teacherId, departmentId, yearLevel, subjectId, schoolYearId, filePath)
-    VALUES (?, ?, ?, ?, ?, ?)`;
+    const query = `
+      INSERT INTO excelGrades 
+      (teacherId, departmentId, yearLevel, subjectId, schoolYearId, filePath)
+      VALUES (?, ?, ?, ?, ?, ?)
+      ON DUPLICATE KEY UPDATE
+      isApproved = 0`;
     const params = [
       teacherId,
       departmentId,
@@ -52,10 +56,10 @@ const Grades = {
       FROM excelGrades eg
       JOIN users u ON u.userId = eg.teacherId
       JOIN subjects s ON s.subjectId = eg.subjectId
-      JOIN departmentSubjects ds ON ds.subjectId = eg.subjectId
+      JOIN departmentSubjects ds ON ds.subjectId = eg.subjectId AND ds.departmentId = eg.departmentId
       JOIN schoolYears sy ON sy.schoolYearId = eg.schoolYearId
       JOIN departments d ON d.departmentId = eg.departmentId
-      WHERE teacherId = ? AND departmentId = ? AND yearLevel = ? AND subjectId = ? AND schoolYearId = ?`;
+      WHERE eg.teacherId = ? AND eg.departmentId = ? AND eg.yearLevel = ? AND eg.subjectId = ? AND eg.schoolYearId = ?`;
     const params = [
       teacherId,
       departmentId,
