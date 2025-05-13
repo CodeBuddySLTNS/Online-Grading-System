@@ -10,6 +10,8 @@ import DepartmentStudents from "./pages/teacher/department-students";
 import PageWrapper from "./pages/page-wrapper";
 import ApprovalPage from "./pages/registrar/waiting-for-approval";
 import StudentRecords from "./pages/registrar/student-records";
+import NotFound from "./pages/not-found";
+import ReviewGrades from "./pages/registrar/review-grades";
 
 const App = () => {
   const isLoggedIn = useMainStore((state) => state.isLoggedIn);
@@ -84,6 +86,16 @@ const App = () => {
                 </PageWrapper>
               }
             />
+            <Route
+              path="/registrar/waiting-for-approval/:excelGradeId"
+              element={
+                <PageWrapper>
+                  <ReviewGrades />
+                </PageWrapper>
+              }
+            />
+
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>
       ) : (
