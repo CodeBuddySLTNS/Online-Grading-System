@@ -8,6 +8,7 @@ import { coleAPI } from "@/lib/utils";
 import Joi from "joi";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { toast } from "sonner";
+import { BookOpen } from "lucide-react";
 
 const schema = Joi.object({
   code: Joi.string().label("Subject Code").required(),
@@ -74,7 +75,10 @@ const InsertSubjectForm = () => {
   return (
     <Card className="w-full mx-auto shadow-lg rounded-2xl gap-3">
       <CardHeader>
-        <h2 className="text-xl font-bold">Add New Subject</h2>
+        <div className="flex items-center gap-2">
+          <BookOpen className="w-6 h-6 text-primary" />
+          <h2 className="text-lg font-bold">Add New Subject</h2>
+        </div>
       </CardHeader>
       <CardContent className="h-full">
         <form

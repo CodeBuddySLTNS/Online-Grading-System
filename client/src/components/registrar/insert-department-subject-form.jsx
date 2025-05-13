@@ -28,6 +28,7 @@ import { Input } from "../ui/input";
 import Joi from "joi";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { toast } from "sonner";
+import { Book } from "lucide-react";
 
 const schema = Joi.object({
   departmentId: Joi.string().required().label("Department"),
@@ -126,7 +127,10 @@ const InsertDepartmentSubjectForm = () => {
   return (
     <Card className="w-full mx-auto shadow-lg rounded-2xl gap-3">
       <CardHeader>
-        <h2 className="text-xl font-bold">Assign Subject to Department</h2>
+        <div className="flex items-center gap-2">
+          <Book className="w-6 h-6 text-primary" />
+          <h2 className="text-lg font-bold">Assign Subject to Department</h2>
+        </div>
       </CardHeader>
       <CardContent className="h-full">
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
