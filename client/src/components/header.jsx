@@ -23,7 +23,7 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 flex flex-col sm:flex-row items-center justify-between gap-4 px-6 py-4 bg-background shadow-md border-b">
+    <header className="sticky top-0 z-50 flex flex-col sm:flex-row items-center justify-between gap-1 md:gap-4 px-6 py-3.5 md:py-4  bg-background shadow-md border-b">
       <div className="flex items-center gap-3">
         <Avatar className="w-10 h-10">
           <AvatarFallback>

@@ -65,8 +65,6 @@ const InsertDepartmentSubjectForm = () => {
           color: "#155724",
         },
       });
-      reset();
-      setSelectedSubject(null);
     },
     onError: (e) => {
       if (e.response?.data?.message) {
@@ -96,7 +94,6 @@ const InsertDepartmentSubjectForm = () => {
     register,
     setValue,
     watch,
-    reset,
     formState: { errors },
   } = useForm({
     resolver: joiResolver(schema),
