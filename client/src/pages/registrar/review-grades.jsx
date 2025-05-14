@@ -3,11 +3,13 @@ import { Header } from "@/components/header";
 import { SortablePaginatedTable } from "@/components/sortable-paginated-table";
 import { Button } from "@/components/ui/button";
 import { coleAPI } from "@/lib/utils";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckCircle, FileText } from "lucide-react";
 import { useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 const ReviewGrades = () => {
+  const queryClient = useQueryClient();
   const { excelGradeId } = useParams();
 
   const { data: grades } = useQuery({
@@ -16,12 +18,44 @@ const ReviewGrades = () => {
   });
 
   const { mutateAsync: approve } = useMutation({
-    mutationFn: coleAPI("/grades/excelgrades/approve"),
+    mutationFn: coleAPI("/grades/excelgrades/approve", "POST"),
+    onSuccess: () => {
+      toast("Success!", {
+        description: "Grades approved.",
+        style: {
+          fontSize: "1rem",
+          backgroundColor: "#d4edda",
+          color: "#155724",
+        },
+      });
+      queryClient.invalidateQueries(["excelData"]);
+    },
+    onError: (e) => {
+      if (e.response?.data?.message) {
+        toast("Error!", {
+          description: e.response?.data?.message,
+          style: {
+            fontSize: "1rem",
+            backgroundColor: "#f8d7da",
+            color: "#721c24",
+          },
+        });
+      } else {
+        toast("Error!", {
+          description: "Unable to connect to the server.",
+          style: {
+            fontSize: "1rem",
+            backgroundColor: "#f8d7da",
+            color: "#721c24",
+          },
+        });
+      }
+    },
   });
 
   const handleApprove = async () => {
     try {
-      await approve(grades.excelGradeId);
+      await approve({ excelGradeId: grades.excelGradeId });
     } catch (error) {
       console.log(error);
     }
@@ -56,7 +90,7 @@ const ReviewGrades = () => {
               onClick={handleApprove}
             >
               <CheckCircle className="w-4 h-4 md:w-5 md:h-5" />
-              <span>Approve</span>
+              <span>{grades?.isApproved ? "Approved" : "Approve"}</span>
             </Button>
           </div>
 

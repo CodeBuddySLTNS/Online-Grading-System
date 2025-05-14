@@ -26,7 +26,7 @@ const Grades = {
     return await sqlQuery(query, params);
   },
 
-  getAllExcelGrades: async () => {
+  getAllExcelGrades: async ({ pending }) => {
     const query = `SELECT eg.excelGradeId,
       CONCAT(u.firstName, ' ', u.lastName) AS teacher, 
       d.departmentName as department, d.shortName as departmentShort,
@@ -37,7 +37,9 @@ const Grades = {
       JOIN subjects s ON s.subjectId = eg.subjectId
       JOIN departmentSubjects ds ON ds.subjectId = eg.subjectId
       JOIN schoolYears sy ON sy.schoolYearId = eg.schoolYearId
-      JOIN departments d ON d.departmentId = eg.departmentId`;
+      JOIN departments d ON d.departmentId = eg.departmentId ${
+        pending ? "WHERE isApproved = 0" : ""
+      }`;
     return await sqlQuery(query);
   },
 
@@ -52,7 +54,7 @@ const Grades = {
       CONCAT(u.firstName, ' ', u.lastName) AS teacher, 
       d.departmentName as department, d.shortName as departmentShort,
       s.subjectName as subject  , ds.semester, eg.yearLevel,
-      sy.schoolYearName as schoolYear, eg.filePath, eg.uploadDate
+      sy.schoolYearName as schoolYear, eg.filePath, eg.uploadDate, eg.isApproved
       FROM excelGrades eg
       JOIN users u ON u.userId = eg.teacherId
       JOIN subjects s ON s.subjectId = eg.subjectId
@@ -74,8 +76,8 @@ const Grades = {
     const query = `SELECT eg.excelGradeId,
       CONCAT(u.firstName, ' ', u.lastName) AS teacher, 
       d.departmentName as department, d.shortName as departmentShort,
-      s.subjectName as subject  , ds.semester, eg.yearLevel,
-      sy.schoolYearName as schoolYear, eg.filePath, eg.uploadDate
+      s.subjectName as subject, ds.semester, eg.yearLevel,
+      sy.schoolYearName as schoolYear, eg.filePath, eg.uploadDate, eg.isApproved
       FROM excelGrades eg
       JOIN users u ON u.userId = eg.teacherId
       JOIN subjects s ON s.subjectId = eg.subjectId
@@ -84,6 +86,11 @@ const Grades = {
       JOIN departments d ON d.departmentId = eg.departmentId
       WHERE excelGradeId = ?`;
     return (await sqlQuery(query, [excelGradeId]))[0];
+  },
+
+  approveExcelGrade: async (excelGradeId) => {
+    const query = `UPDATE excelGrades SET isApproved = 1 WHERE excelGradeId = ?`;
+    return await sqlQuery(query, [excelGradeId]);
   },
 };
 

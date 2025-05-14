@@ -7,7 +7,7 @@ import { coleAPI } from "@/lib/utils";
 export default function PendingGrades() {
   const { data: grades } = useQuery({
     queryKey: ["excelGrades"],
-    queryFn: coleAPI("/grades/excelgrades"),
+    queryFn: coleAPI("/grades/excelgrades?pending=1"),
   });
 
   return (

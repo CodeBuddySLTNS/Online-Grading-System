@@ -68,7 +68,7 @@ module.exports.sqlTableQueries = `
         departmentId INT NOT NULL,
         yearLevel TINYINT NOT NULL CHECK (yearLevel BETWEEN 1 AND 4),
         semester TINYINT NOT NULL CHECK (semester IN (1, 2)),
-        PRIMARY KEY (departmentId, subjectId),
+        PRIMARY KEY (departmentId, subjectId, yearLevel),
         FOREIGN KEY (departmentId) REFERENCES departments(departmentId) ON DELETE CASCADE,
         FOREIGN KEY (subjectId) REFERENCES subjects(subjectId) ON DELETE CASCADE
     );

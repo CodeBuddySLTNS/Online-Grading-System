@@ -42,7 +42,8 @@ const uploadexcel = async (req, res) => {
 };
 
 const excelGrades = async (req, res) => {
-  const excelGrades = await Grades.getAllExcelGrades();
+  const { pending } = req.query;
+  const excelGrades = await Grades.getAllExcelGrades({ pending });
   res.send(excelGrades);
 };
 
@@ -81,9 +82,21 @@ const excelGrade = async (req, res) => {
   res.send({ ...excelGrade, data });
 };
 
+const approveExcelGrade = async (req, res) => {
+  const { excelGradeId } = req.body;
+
+  if (!excelGradeId) {
+    throw new CustomError("excelGradeId is required.", status.BAD_REQUEST);
+  }
+
+  const result = await Grades.approveExcelGrade(excelGradeId);
+  res.send(result);
+};
+
 module.exports = {
   grades,
   uploadexcel,
   excelGrades,
   excelGrade,
+  approveExcelGrade,
 };
