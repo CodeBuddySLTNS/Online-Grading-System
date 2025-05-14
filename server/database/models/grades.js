@@ -92,6 +92,92 @@ const Grades = {
     const query = `UPDATE excelGrades SET isApproved = 1 WHERE excelGradeId = ?`;
     return await sqlQuery(query, [excelGradeId]);
   },
+
+  addGrade: async ({
+    studentId,
+    teacherId,
+    departmentId,
+    yearLevel,
+    subjectId,
+    schoolYearId,
+    prelim,
+    midterm,
+    semifinal,
+    final,
+    average,
+  }) => {
+    const query = `
+      INSERT INTO grades 
+      (studentId, teacherId, departmentId, yearLevel, subjectId, schoolYearId, prelim, midterm, semifinal, final, average)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ON DUPLICATE KEY UPDATE
+      prelim = VALUES(prelim),
+      midterm = VALUES(midterm),
+      semifinal = VALUES(semifinal),
+      final = VALUES(final),
+      average = VALUES(average)`;
+    const params = [
+      studentId,
+      teacherId,
+      departmentId,
+      yearLevel,
+      subjectId,
+      schoolYearId,
+      prelim,
+      midterm,
+      semifinal,
+      final,
+      average,
+    ];
+    return await sqlQuery(query, params);
+  },
+
+  getAllGrades: async () => {
+    const query = `
+      SELECT g.gradeId, g.studentId, CONCAT(u.firstName, ' ', u.lastName) AS studentName,
+        g.teacherId, CONCAT(tu.firstName, ' ', tu.lastName) AS teacherName,
+        g.departmentId, d.departmentName, g.yearLevel, g.subjectId, s.subjectName,
+        g.schoolYearId, sy.schoolYearName, g.prelim, g.midterm, g.semifinal, g.final, g.average
+      FROM grades g
+      JOIN users u ON u.userId = g.studentId
+      JOIN users tu ON tu.userId = g.teacherId
+      JOIN departments d ON d.departmentId = g.departmentId
+      JOIN subjects s ON s.subjectId = g.subjectId
+      JOIN schoolYears sy ON sy.schoolYearId = g.schoolYearId`;
+    return await sqlQuery(query);
+  },
+
+  getGradeById: async (gradeId) => {
+    const query = `
+      SELECT g.gradeId, g.studentId, CONCAT(u.firstName, ' ', u.lastName) AS studentName,
+        g.teacherId, CONCAT(tu.firstName, ' ', tu.lastName) AS teacherName,
+        g.departmentId, d.departmentName, g.yearLevel, g.subjectId, s.subjectName,
+        g.schoolYearId, sy.schoolYearName, g.prelim, g.midterm, g.semifinal, g.final, g.average
+      FROM grades g
+      JOIN users u ON u.userId = g.studentId
+      JOIN users tu ON tu.userId = g.teacherId
+      JOIN departments d ON d.departmentId = g.departmentId
+      JOIN subjects s ON s.subjectId = g.subjectId
+      JOIN schoolYears sy ON sy.schoolYearId = g.schoolYearId
+      WHERE g.gradeId = ?`;
+    return (await sqlQuery(query, [gradeId]))[0];
+  },
+
+  getGradesByStudentId: async (studentId) => {
+    const query = `
+      SELECT g.gradeId, g.studentId, CONCAT(u.firstName, ' ', u.lastName) AS studentName,
+        g.teacherId, CONCAT(tu.firstName, ' ', tu.lastName) AS teacherName,
+        g.departmentId, d.departmentName, g.yearLevel, g.subjectId, s.subjectName,
+        g.schoolYearId, sy.schoolYearName, g.prelim, g.midterm, g.semifinal, g.final, g.average
+      FROM grades g
+      JOIN users u ON u.userId = g.studentId
+      JOIN users tu ON tu.userId = g.teacherId
+      JOIN departments d ON d.departmentId = g.departmentId
+      JOIN subjects s ON s.subjectId = g.subjectId
+      JOIN schoolYears sy ON sy.schoolYearId = g.schoolYearId
+      WHERE g.studentId = ?`;
+    return await sqlQuery(query, [studentId]);
+  },
 };
 
 module.exports = Grades;

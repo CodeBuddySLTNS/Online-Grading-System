@@ -80,7 +80,7 @@ module.exports.sqlTableQueries = `
         yearLevel TINYINT NOT NULL,
         schoolYearId INT NOT NULL,
         subjectId INT NOT NULL,
-        PRIMARY KEY (studentId, subjectId, schoolYearId),
+        PRIMARY KEY (studentId, subjectId, schoolYearId, yearLevel, departmentId),
         FOREIGN KEY (studentId) REFERENCES students(studentId) ON DELETE CASCADE,
         FOREIGN KEY (teacherId) REFERENCES teachers(teacherId) ON DELETE CASCADE,
         FOREIGN KEY (departmentId) REFERENCES departments(departmentId) ON DELETE CASCADE,
@@ -101,7 +101,7 @@ module.exports.sqlTableQueries = `
         UNIQUE KEY uniqueExcelGrade (teacherId, departmentId, yearLevel, subjectId, schoolYearId),
         FOREIGN KEY (teacherId, departmentId, yearLevel, subjectId, schoolYearId)
             REFERENCES teacherDepartmentSubjects(teacherId, departmentId, yearLevel, subjectId, schoolYearId) ON DELETE CASCADE
-    );
+    );  
 
     CREATE TABLE IF NOT EXISTS grades (
         gradeId INT AUTO_INCREMENT PRIMARY KEY,
@@ -111,7 +111,11 @@ module.exports.sqlTableQueries = `
         yearLevel TINYINT NOT NULL CHECK (yearLevel BETWEEN 1 AND 4),
         subjectId INT NOT NULL,
         schoolYearId INT NOT NULL,
-        gradeValue DECIMAL(5,2) NOT NULL,
+        prelim DECIMAL(5,2),
+        midterm DECIMAL(5,2),
+        semifinal DECIMAL(5,2),
+        final DECIMAL(5,2),
+        average DECIMAL(5,2),
         FOREIGN KEY (studentId) REFERENCES students(studentId) ON DELETE CASCADE,
         FOREIGN KEY (teacherId, departmentId, yearLevel, subjectId)
             REFERENCES teacherDepartmentSubjects(teacherId, departmentId, yearLevel, subjectId) ON DELETE CASCADE,

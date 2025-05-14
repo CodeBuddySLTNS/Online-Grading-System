@@ -93,10 +93,62 @@ const approveExcelGrade = async (req, res) => {
   res.send(result);
 };
 
+const addGrade = async (req, res) => {
+  const schema = Joi.object({
+    studentId: Joi.number().integer().required(),
+    teacherId: Joi.number().integer().required(),
+    departmentId: Joi.number().integer().required(),
+    yearLevel: Joi.number().integer().min(1).max(4).required(),
+    subjectId: Joi.number().integer().required(),
+    schoolYearId: Joi.number().integer().required(),
+    prelim: Joi.number().precision(2).required(),
+    midterm: Joi.number().precision(2).required(),
+    semifinal: Joi.number().precision(2).required(),
+    final: Joi.number().precision(2).required(),
+    average: Joi.number().precision(2).required(),
+  });
+
+  const { error, value } = schema.validate(req.body, { abortEarly: false });
+
+  if (error) {
+    const errorMessage = error.details
+      .map((detail) => detail.message)
+      .join(", ");
+    throw new CustomError(errorMessage, status.BAD_REQUEST);
+  }
+
+  const result = await Grades.addGrade(value);
+  res.send({ message: "Grade added successfully.", result });
+};
+
+const getAllGrades = async (req, res) => {
+  const grades = await Grades.getAllGrades();
+  res.send(grades);
+};
+
+const getGradeById = async (req, res) => {
+  const { gradeId } = req.params;
+
+  if (!gradeId) {
+    throw new CustomError("gradeId is required.", status.BAD_REQUEST);
+  }
+
+  const grade = await Grades.getGradeById(gradeId);
+
+  if (!grade) {
+    throw new CustomError("Grade not found.", status.NOT_FOUND);
+  }
+
+  res.send(grade);
+};
+
 module.exports = {
   grades,
   uploadexcel,
   excelGrades,
   excelGrade,
   approveExcelGrade,
+  addGrade,
+  getAllGrades,
+  getGradeById,
 };
