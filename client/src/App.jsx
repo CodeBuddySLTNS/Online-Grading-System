@@ -14,6 +14,7 @@ import NotFound from "./pages/not-found";
 import ReviewGrades from "./pages/registrar/review-grades";
 import Students from "./pages/registrar/department-students";
 import StudentGrades from "./pages/registrar/student-grades";
+import BgImageLayer from "./components/bg-image-layer";
 
 const App = () => {
   const isLoggedIn = useMainStore((state) => state.isLoggedIn);
@@ -50,6 +51,7 @@ const App = () => {
 
   return (
     <div>
+      <BgImageLayer />
       {isLoggedIn ? (
         <Router>
           <Routes>

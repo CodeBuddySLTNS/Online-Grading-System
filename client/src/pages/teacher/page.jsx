@@ -22,7 +22,7 @@ export default function TeachersPortal() {
   });
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen ">
       <Header />
 
       <div className="px-4 md:px-20 py-8">
@@ -39,7 +39,7 @@ export default function TeachersPortal() {
               </Link>
             </div>
 
-            <div className="bg-card rounded-xl px-6">
+            <div className=" rounded-xl px-6">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <h1 className="text-xl sm:text-2xl font-bold text-primary">
                   Departments You’re Handling

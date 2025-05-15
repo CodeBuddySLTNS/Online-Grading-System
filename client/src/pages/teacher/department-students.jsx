@@ -20,7 +20,7 @@ export default function DepartmentStudents() {
   });
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Header />
       <main className="flex justify-center px-4 py-8 md:px-20">
         {subject ? (

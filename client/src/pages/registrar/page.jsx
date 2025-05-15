@@ -15,7 +15,7 @@ export function RegistrarDashboard() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Header />
       <main className="max-w-6xl mx-auto px-4 py-8 mb-16">
         <div className="flex flex-wrap justify-between mb-6 gap-3">

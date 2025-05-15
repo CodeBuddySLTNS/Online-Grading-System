@@ -74,7 +74,7 @@ const ReviewGrades = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Header />
       <div className="p-4 max-w-6xl mx-auto">
         <NavigateBack />

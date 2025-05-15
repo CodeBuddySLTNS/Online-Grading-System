@@ -29,7 +29,7 @@ export default function StudentGrades() {
   }, [grades]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen text-foreground">
       <Header />
       <div className="p-4 mx-auto">
         <NavigateBack />
