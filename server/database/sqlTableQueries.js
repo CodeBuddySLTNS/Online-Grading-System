@@ -116,6 +116,7 @@ module.exports.sqlTableQueries = `
         semifinal DECIMAL(5,2),
         final DECIMAL(5,2),
         average DECIMAL(5,2),
+        UNIQUE KEY uniqueGrades (studentId, teacherId, departmentId, yearLevel, subjectId, schoolYearId),
         FOREIGN KEY (studentId) REFERENCES students(studentId) ON DELETE CASCADE,
         FOREIGN KEY (teacherId, departmentId, yearLevel, subjectId)
             REFERENCES teacherDepartmentSubjects(teacherId, departmentId, yearLevel, subjectId) ON DELETE CASCADE,
