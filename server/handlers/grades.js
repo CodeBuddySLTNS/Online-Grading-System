@@ -4,6 +4,7 @@ const sqlQuery = require("../database/sqlQuery");
 const { CustomError } = require("../lib/utils");
 const { default: status } = require("http-status");
 const Grades = require("../database/models/grades");
+const { getStudentSubjectById } = require("../database/models/student");
 
 const grades = async (req, res) => {
   res.send("grades");
@@ -190,6 +191,12 @@ const getGradeById = async (req, res) => {
   res.send(grade);
 };
 
+const getGradesByStudent = async (req, res) => {
+  const { studentId, schoolYearId } = req.query;
+  const result = await Grades.getStudentGrades(studentId, schoolYearId);
+  res.send(result);
+};
+
 const approveGrades = async (req, res) => {
   const result = await Grades.approveGrades(req.body);
   res.send(result);
@@ -209,6 +216,7 @@ module.exports = {
   addGrade,
   getAllGrades,
   getAllPendingGrades,
+  getGradesByStudent,
   getGradeById,
   approveGrades,
   submitGrades,

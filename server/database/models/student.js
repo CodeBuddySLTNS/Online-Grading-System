@@ -40,7 +40,7 @@ const Student = {
       JOIN departments d ON s.departmentId = d.departmentId
       LEFT JOIN grades g 
           ON s.studentId = g.studentId
-          AND g.teacherId = ?        
+          ${teacherId ? "AND g.teacherId = ?" : ""}        
           AND g.departmentId = ?    
           AND g.yearLevel = ?        
           AND g.subjectId = ?           
@@ -51,7 +51,7 @@ const Student = {
 
     `;
 
-    return await sqlQuery(query, [
+    const params = [
       teacherId,
       departmentId,
       yearLevel,
@@ -59,7 +59,10 @@ const Student = {
       schoolYearId,
       departmentId,
       yearLevel,
-    ]);
+    ];
+
+    if (!teacherId) params.shift();
+    return await sqlQuery(query, params);
   },
 
   addStudentSubject: async ({
