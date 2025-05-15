@@ -178,6 +178,56 @@ const Grades = {
       WHERE g.studentId = ?`;
     return await sqlQuery(query, [studentId]);
   },
+
+  submitGrades: async ({
+    teacherId,
+    departmentId,
+    yearLevel,
+    subjectId,
+    schoolYearId,
+  }) => {
+    const query = `
+      UPDATE grades
+      SET isSubmitted = TRUE
+      WHERE 
+        AND teacherId = ?
+        AND departmentId = ?
+        AND yearLevel = ?
+        AND subjectId = ?
+        AND schoolYearId = ?`;
+    return await sqlQuery(query, [
+      teacherId,
+      departmentId,
+      yearLevel,
+      subjectId,
+      schoolYearId,
+    ]);
+  },
+
+  approveGrades: async ({
+    teacherId,
+    departmentId,
+    yearLevel,
+    subjectId,
+    schoolYearId,
+  }) => {
+    const query = `
+      UPDATE grades
+      SET isApproved = TRUE
+      WHERE 
+        AND teacherId = ?
+        AND departmentId = ?
+        AND yearLevel = ?
+        AND subjectId = ?
+        AND schoolYearId = ?`;
+    return await sqlQuery(query, [
+      teacherId,
+      departmentId,
+      yearLevel,
+      subjectId,
+      schoolYearId,
+    ]);
+  },
 };
 
 module.exports = Grades;

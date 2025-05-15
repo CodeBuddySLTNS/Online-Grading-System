@@ -12,6 +12,7 @@ import ApprovalPage from "./pages/registrar/waiting-for-approval";
 import StudentRecords from "./pages/registrar/student-records";
 import NotFound from "./pages/not-found";
 import ReviewGrades from "./pages/registrar/review-grades";
+import Students from "./pages/registrar/department-students";
 
 const App = () => {
   const isLoggedIn = useMainStore((state) => state.isLoggedIn);
@@ -75,6 +76,14 @@ const App = () => {
               element={
                 <PageWrapper>
                   <StudentRecords />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path="/registrar/student-records/:department/:yearLevel/:departmentId"
+              element={
+                <PageWrapper>
+                  <Students />
                 </PageWrapper>
               }
             />
