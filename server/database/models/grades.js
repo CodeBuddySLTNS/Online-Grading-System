@@ -136,14 +136,35 @@ const Grades = {
     const query = `
       SELECT g.gradeId, g.studentId, CONCAT(u.firstName, ' ', u.lastName) AS studentName,
         g.teacherId, CONCAT(tu.firstName, ' ', tu.lastName) AS teacherName,
-        g.departmentId, d.departmentName, g.yearLevel, g.subjectId, s.subjectName,
-        g.schoolYearId, sy.schoolYearName, g.prelim, g.midterm, g.semifinal, g.final, g.average
+        g.departmentId, d.departmentName, d.shortName AS departmentShort, g.yearLevel, g.subjectId, s.subjectName,
+        ds.semester, g.schoolYearId, sy.schoolYearName, g.prelim, g.midterm, g.semifinal, g.final, g.average
       FROM grades g
       JOIN users u ON u.userId = g.studentId
       JOIN users tu ON tu.userId = g.teacherId
       JOIN departments d ON d.departmentId = g.departmentId
+      JOIN departmentSubjects ds ON ds.subjectId = g.subjectId 
+        AND ds.departmentId = g.departmentId AND ds.yearLevel = g.yearLevel
       JOIN subjects s ON s.subjectId = g.subjectId
       JOIN schoolYears sy ON sy.schoolYearId = g.schoolYearId`;
+    return await sqlQuery(query);
+  },
+
+  getAllPendingGrades: async () => {
+    const query = `
+     SELECT g.gradeId, g.studentId, CONCAT(u.firstName, ' ', u.lastName) AS studentName,
+        g.teacherId, CONCAT(tu.firstName, ' ', tu.lastName) AS teacherName,
+        g.departmentId, d.departmentName, d.shortName AS departmentShort, g.yearLevel, g.subjectId, s.subjectName,
+        ds.semester, g.schoolYearId, sy.schoolYearName, g.prelim, g.midterm, g.semifinal, g.final, g.average
+      FROM grades g
+      JOIN users u ON u.userId = g.studentId
+      JOIN users tu ON tu.userId = g.teacherId
+      JOIN departments d ON d.departmentId = g.departmentId
+      JOIN departmentSubjects ds ON ds.subjectId = g.subjectId 
+        AND ds.departmentId = g.departmentId AND ds.yearLevel = g.yearLevel
+      JOIN subjects s ON s.subjectId = g.subjectId
+      JOIN schoolYears sy ON sy.schoolYearId = g.schoolYearId
+      WHERE g.isApproved = false AND g.isSubmitted = true
+`;
     return await sqlQuery(query);
   },
 
@@ -189,8 +210,7 @@ const Grades = {
     const query = `
       UPDATE grades
       SET isSubmitted = TRUE
-      WHERE 
-        AND teacherId = ?
+      WHERE teacherId = ?
         AND departmentId = ?
         AND yearLevel = ?
         AND subjectId = ?
@@ -214,8 +234,7 @@ const Grades = {
     const query = `
       UPDATE grades
       SET isApproved = TRUE
-      WHERE 
-        AND teacherId = ?
+      WHERE teacherId = ?
         AND departmentId = ?
         AND yearLevel = ?
         AND subjectId = ?

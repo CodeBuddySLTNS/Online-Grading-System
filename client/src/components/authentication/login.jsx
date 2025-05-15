@@ -8,7 +8,6 @@ import Joi from "joi";
 import { useMutation } from "@tanstack/react-query";
 import { coleAPI } from "@/lib/utils";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
 
 const loginSchema = Joi.object({
   username: Joi.string().required().label("Username"),
@@ -16,8 +15,6 @@ const loginSchema = Joi.object({
 });
 
 export default function LoginPage({ setAuth }) {
-  const navigate = useNavigate();
-
   const { mutateAsync: login } = useMutation({
     mutationFn: coleAPI("/auth/login", "POST"),
     onSuccess: (data) => {

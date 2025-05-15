@@ -126,6 +126,54 @@ const getAllGrades = async (req, res) => {
   res.send(grades);
 };
 
+const getAllPendingGrades = async (req, res) => {
+  const grades = await Grades.getAllPendingGrades();
+
+  const grouped = grades.reduce((acc, grade) => {
+    const key = [
+      grade.teacherId,
+      grade.departmentId,
+      grade.yearLevel,
+      grade.subjectId,
+      grade.schoolYearId,
+    ].join("|");
+
+    if (!acc[key]) {
+      acc[key] = {
+        teacherId: grade.teacherId,
+        teacherName: grade.teacherName,
+        departmentId: grade.departmentId,
+        departmentName: grade.departmentName,
+        departmentShort: grade.departmentShort,
+        yearLevel: grade.yearLevel,
+        subjectId: grade.subjectId,
+        subjectName: grade.subjectName,
+        schoolYearId: grade.schoolYearId,
+        semester: grade.semester,
+        schoolYearName: grade.schoolYearName,
+        students: [],
+      };
+    }
+
+    acc[key].students.push({
+      gradeId: grade.gradeId,
+      studentId: grade.studentId,
+      studentName: grade.studentName,
+      prelim: parseFloat(grade.prelim),
+      midterm: parseFloat(grade.midterm),
+      semifinal: parseFloat(grade.semifinal),
+      final: parseFloat(grade.final),
+      average: parseFloat(grade.average),
+    });
+
+    return acc;
+  }, {});
+
+  const groupedArray = Object.values(grouped);
+
+  res.send(groupedArray);
+};
+
 const getGradeById = async (req, res) => {
   const { gradeId } = req.params;
 
@@ -142,6 +190,16 @@ const getGradeById = async (req, res) => {
   res.send(grade);
 };
 
+const approveGrades = async (req, res) => {
+  const result = await Grades.approveGrades(req.body);
+  res.send(result);
+};
+
+const submitGrades = async (req, res) => {
+  const result = await Grades.submitGrades(req.body);
+  res.send(result);
+};
+
 module.exports = {
   grades,
   uploadexcel,
@@ -150,5 +208,8 @@ module.exports = {
   approveExcelGrade,
   addGrade,
   getAllGrades,
+  getAllPendingGrades,
   getGradeById,
+  approveGrades,
+  submitGrades,
 };

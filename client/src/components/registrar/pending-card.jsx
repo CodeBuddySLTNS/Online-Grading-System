@@ -22,22 +22,24 @@ const PendingCard = ({ grade }) => {
       </CardHeader>
 
       <CardContent className="space-y-2 text-sm text-muted-foreground">
-        <InfoRow label="Subject" value={grade.subject} />
+        <InfoRow label="Subject" value={grade.subjectName} />
         <InfoRow label="Department" value={grade.departmentShort} />
         <InfoRow label="Year Level" value={grade.yearLevel} />
-        <InfoRow
-          label="Semester"
-          value={grade.semester === 1 ? "1st" : "2nd"}
-        />
-        <InfoRow label="Submitted By" value={grade.teacher} />
-        <InfoRow label="School Year" value={grade.schoolYear} />
+        <InfoRow label="School Year" value={grade.schoolYearName} />
+        <InfoRow label="Submitted By" value={grade.teacherName} />
+        <InfoRow label="Number of Students" value={grade.students.length} />
       </CardContent>
 
       <CardFooter>
         <Button
           className="w-full shadow-sm"
           onClick={() =>
-            navigate(`/registrar/waiting-for-approval/${grade.excelGradeId}`)
+            navigate(
+              `/registrar/waiting-for-approval/${
+                grade.departmentShort + grade.yearLevel
+              }`,
+              { state: grade }
+            )
           }
         >
           Review Grades

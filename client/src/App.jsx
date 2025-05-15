@@ -96,7 +96,7 @@ const App = () => {
               }
             />
             <Route
-              path="/registrar/waiting-for-approval/:excelGradeId"
+              path="/registrar/waiting-for-approval/:department"
               element={
                 <PageWrapper>
                   <ReviewGrades />

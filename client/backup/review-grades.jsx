@@ -3,16 +3,19 @@ import { Header } from "@/components/header";
 import { SortablePaginatedTable } from "@/components/sortable-paginated-table";
 import { Button } from "@/components/ui/button";
 import { coleAPI } from "@/lib/utils";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckCircle, FileText } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 const ReviewGrades = () => {
   const queryClient = useQueryClient();
-  const grades = useLocation().state;
+  const { excelGradeId } = useParams();
 
-  console.log(grades);
+  const { data: grades } = useQuery({
+    queryKey: ["excelData"],
+    queryFn: coleAPI(`/grades/excelgrade?id=${excelGradeId}`),
+  });
 
   const { mutateAsync: approve } = useMutation({
     mutationFn: coleAPI("/grades/excelgrades/approve", "POST"),
@@ -74,8 +77,8 @@ const ReviewGrades = () => {
                     `(${grades.departmentShort}-${grades.yearLevel})`}
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                  {grades?.subjectName &&
-                    `${grades?.subjectName} | ${
+                  {grades?.subject &&
+                    `${grades?.subject} | ${
                       grades?.semester == 1 ? "1st Semester" : "2nd Semester"
                     }`}
                 </p>

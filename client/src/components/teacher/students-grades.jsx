@@ -16,6 +16,7 @@ import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
 import NavigateBack from "@/components/back";
+import { toast } from "sonner";
 
 const StudentsGrades = ({
   setSubject,
@@ -27,6 +28,7 @@ const StudentsGrades = ({
 }) => {
   const queryClient = useQueryClient();
   const user = useMainStore((state) => state.user);
+  const [submitted, setSubmitted] = useState(false);
   const [edit, setEdit] = useState({
     studentId: "",
     prelim: "",
@@ -53,6 +55,43 @@ const StudentsGrades = ({
         semifinal: "",
         final: "",
       });
+      setSubmitted(false);
+    },
+  });
+
+  const { mutateAsync: submitGrades } = useMutation({
+    mutationFn: coleAPI("/grades/submit", "POST"),
+    onSuccess: () => {
+      toast("Success!", {
+        description: "Grades submitted successfully and waiting for approval.",
+        style: {
+          fontSize: "1rem",
+          backgroundColor: "#d4edda",
+          color: "#155724",
+        },
+      });
+      setSubmitted(true);
+    },
+    onError: (e) => {
+      if (e.response?.data?.message) {
+        toast("Error!", {
+          description: e.response?.data?.message,
+          style: {
+            fontSize: "1rem",
+            backgroundColor: "#f8d7da",
+            color: "#721c24",
+          },
+        });
+      } else {
+        toast("Error!", {
+          description: "Unable to connect to the server.",
+          style: {
+            fontSize: "1rem",
+            backgroundColor: "#f8d7da",
+            color: "#721c24",
+          },
+        });
+      }
     },
   });
 
@@ -78,6 +117,24 @@ const StudentsGrades = ({
     ).toFixed(1);
   };
 
+  const handleSubmitGrades = async () => {
+    const body = {
+      teacherId: user.userId,
+      departmentId: Number(departmentId),
+      yearLevel: Number(year),
+      subjectId: subject.subjectId,
+      schoolYearId: Number(sy),
+    };
+
+    try {
+      await submitGrades(body);
+    } catch (error) {
+      console.log(error);
+    }
+
+    console.log(body);
+  };
+
   const handleSaveChanges = async () => {
     const average = getAverage();
     const body = {
@@ -99,8 +156,6 @@ const StudentsGrades = ({
     } catch (error) {
       console.log(error);
     }
-
-    console.log(body);
   };
 
   const handleDiscardChanges = (student) => {
@@ -132,7 +187,9 @@ const StudentsGrades = ({
               </p>
             </div>
           </div>
-          <Button>Submit Grades</Button>
+          <Button disabled={submitted} onClick={handleSubmitGrades}>
+            Submit Grades
+          </Button>
         </CardHeader>
         <CardContent>
           <Table>
@@ -172,7 +229,7 @@ const StudentsGrades = ({
                     <TableCell>
                       {student.studentId === edit.studentId ? (
                         <Input
-                          value={edit.prelim}
+                          value={edit.prelim || ""}
                           className="w-full disabled:text-black disabled:opacity-100"
                           type="number"
                           min={1}
@@ -192,7 +249,7 @@ const StudentsGrades = ({
                     <TableCell>
                       {student.studentId === edit.studentId ? (
                         <Input
-                          value={edit.midterm}
+                          value={edit.midterm || ""}
                           className="w-full disabled:text-black disabled:opacity-100"
                           type="number"
                           min={1}
@@ -214,7 +271,7 @@ const StudentsGrades = ({
                     <TableCell>
                       {student.studentId === edit.studentId ? (
                         <Input
-                          value={edit.semifinal}
+                          value={edit.semifinal || ""}
                           className="w-full disabled:text-black disabled:opacity-100"
                           type="number"
                           min={1}
@@ -236,7 +293,7 @@ const StudentsGrades = ({
                     <TableCell>
                       {student.studentId === edit.studentId ? (
                         <Input
-                          value={edit.final}
+                          value={edit.final || ""}
                           className="w-full disabled:text-black disabled:opacity-100"
                           type="number"
                           min={1}

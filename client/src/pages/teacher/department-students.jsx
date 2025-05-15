@@ -1,17 +1,10 @@
 import { useState } from "react";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
-
-import { Button } from "@/components/ui/button";
-import { User } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { Header } from "@/components/header";
-import ExcelUploader from "@/components/teacher/excel-uploader";
 import { CourseTable } from "./courses-table";
 import { coleAPI } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useMainStore } from "@/states/store";
-import NavigateBack from "@/components/back";
-import StudentGrades from "@/components/teacher/student-grades";
 import StudentsGrades from "@/components/teacher/students-grades";
 
 export default function DepartmentStudents() {
