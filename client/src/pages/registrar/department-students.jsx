@@ -4,19 +4,17 @@ import { StudentsTable } from "@/components/registrar/students-table";
 import { coleAPI } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { FileText } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const Students = () => {
-  const { departmentId, department, yearLevel } = useParams();
+  const { department, yearLevel } = useLocation().state;
 
   const { data: students } = useQuery({
     queryKey: ["students"],
     queryFn: coleAPI(
-      `/students?departmentId=${departmentId}&yearLevel=${yearLevel}`
+      `/students?departmentId=${department?.departmentId}&yearLevel=${yearLevel}`
     ),
   });
-
-  console.log(students);
 
   return (
     <div className="min-h-screen">
@@ -29,7 +27,8 @@ const Students = () => {
               <FileText className="w-6 h-6 text-primary shrink-0" />
               <div>
                 <h1 className="text-lg md:text-xl font-semibold leading-snug">
-                  Student Records {department && `(${department}-${yearLevel})`}
+                  Student Records{" "}
+                  {department && `(${department?.shortName}-${yearLevel})`}
                 </h1>
               </div>
             </div>

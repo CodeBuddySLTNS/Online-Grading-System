@@ -2,20 +2,29 @@ import NavigateBack from "@/components/back";
 import { Header } from "@/components/header";
 import { SortablePaginatedTable } from "@/components/sortable-paginated-table";
 import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { coleAPI } from "@/lib/utils";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { CheckCircle, FileText } from "lucide-react";
+import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { toast } from "sonner";
 
 const ReviewGrades = () => {
-  const queryClient = useQueryClient();
   const grades = useLocation().state;
+  const [isApproved, setApproved] = useState(false);
 
   console.log(grades);
 
   const { mutateAsync: approve } = useMutation({
-    mutationFn: coleAPI("/grades/excelgrades/approve", "POST"),
+    mutationFn: coleAPI("/grades/approve", "POST"),
     onSuccess: () => {
       toast("Success!", {
         description: "Grades approved.",
@@ -25,7 +34,7 @@ const ReviewGrades = () => {
           color: "#155724",
         },
       });
-      queryClient.invalidateQueries(["excelData"]);
+      setApproved(true);
     },
     onError: (e) => {
       if (e.response?.data?.message) {
@@ -52,7 +61,13 @@ const ReviewGrades = () => {
 
   const handleApprove = async () => {
     try {
-      await approve({ excelGradeId: grades.excelGradeId });
+      await approve({
+        teacherId: grades.teacherId,
+        departmentId: grades.departmentId,
+        yearLevel: grades.yearLevel,
+        subjectId: grades.subjectId,
+        schoolYearId: grades.schoolYearId,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -83,15 +98,40 @@ const ReviewGrades = () => {
             </div>
             <Button
               className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 text-sm md:text-base font-medium shadow-md bg-green-700 hover:bg-green-500"
-              disabled={grades?.isApproved || !grades?.subject}
+              disabled={isApproved || !grades?.subjectName}
               onClick={handleApprove}
             >
               <CheckCircle className="w-4 h-4 md:w-5 md:h-5" />
-              <span>{grades?.isApproved ? "Approved" : "Approve"}</span>
+              <span>{isApproved ? "Approved" : "Approve"}</span>
             </Button>
           </div>
 
-          <SortablePaginatedTable data={grades?.data} pageSize={10} />
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead className="text-center">Prelim</TableHead>
+                <TableHead className="text-center">Midterm</TableHead>
+                <TableHead className="text-center">Semifinal</TableHead>
+                <TableHead className="text-center">Final</TableHead>
+                <TableHead className="text-center">Average</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {grades?.students?.map((grade, index) => (
+                <TableRow key={index}>
+                  <TableCell>{grade.studentName}</TableCell>
+                  <TableCell className="text-center">{grade.prelim}</TableCell>
+                  <TableCell className="text-center">{grade.midterm}</TableCell>
+                  <TableCell className="text-center">
+                    {grade.semifinal}
+                  </TableCell>
+                  <TableCell className="text-center">{grade.final}</TableCell>
+                  <TableCell className="text-center">{grade.average}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
       </div>
     </div>

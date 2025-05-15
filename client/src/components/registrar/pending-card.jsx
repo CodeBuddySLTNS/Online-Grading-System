@@ -25,6 +25,7 @@ const PendingCard = ({ grade }) => {
         <InfoRow label="Subject" value={grade.subjectName} />
         <InfoRow label="Department" value={grade.departmentShort} />
         <InfoRow label="Year Level" value={grade.yearLevel} />
+        <InfoRow label="Semester" value={grade.semester} />
         <InfoRow label="School Year" value={grade.schoolYearName} />
         <InfoRow label="Submitted By" value={grade.teacherName} />
         <InfoRow label="Number of Students" value={grade.students.length} />

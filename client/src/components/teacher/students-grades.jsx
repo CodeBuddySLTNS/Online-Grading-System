@@ -61,9 +61,13 @@ const StudentsGrades = ({
 
   const { mutateAsync: submitGrades } = useMutation({
     mutationFn: coleAPI("/grades/submit", "POST"),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log(data);
       toast("Success!", {
-        description: "Grades submitted successfully and waiting for approval.",
+        description:
+          data?.changedRows === 0
+            ? "Grades already submitted."
+            : "Grades submitted successfully and waiting for approval.",
         style: {
           fontSize: "1rem",
           backgroundColor: "#d4edda",
@@ -217,9 +221,9 @@ const StudentsGrades = ({
             </TableHeader>
             <TableBody>
               {students?.length > 0 ? (
-                students.map((student) => (
+                students.map((student, index) => (
                   <TableRow
-                    key={student.studentId}
+                    key={index}
                     className="cursor-pointer"
                     onClick={() => handleRowClick(student)}
                   >

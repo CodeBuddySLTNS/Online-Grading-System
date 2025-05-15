@@ -7,7 +7,7 @@ import { coleAPI } from "@/lib/utils";
 export default function PendingGrades() {
   const { data: grades } = useQuery({
     queryKey: ["excelGrades"],
-    queryFn: () => coleAPI("/grades/pending")(),
+    queryFn: coleAPI("/grades/pending"),
   });
 
   return (
@@ -17,7 +17,7 @@ export default function PendingGrades() {
         <NavigateBack />
         {grades?.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {grades.map((gradeGroup, index) => (
+            {grades?.map((gradeGroup, index) => (
               <PendingCard key={index} grade={gradeGroup} />
             ))}
           </div>

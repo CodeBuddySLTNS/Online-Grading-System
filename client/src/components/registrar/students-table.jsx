@@ -9,8 +9,10 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
 export function StudentsTable({ data = [], pageSize = 5 }) {
+  const { department, yearLevel } = useLocation().state;
   const [currentPage, setCurrentPage] = useState(1);
   const [sortColumn, setSortColumn] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
@@ -55,7 +57,7 @@ export function StudentsTable({ data = [], pageSize = 5 }) {
             <TableHeader>
               <TableRow>
                 <TableHead onClick={() => handleSort(0)}>
-                  <p className="flex items-center cursor-pointer select-none gap-0.5">
+                  <p className="flex items-center justify-center cursor-pointer select-none gap-0.5">
                     Name
                     {sortColumn === 0 &&
                       (sortOrder === "asc" ? (
@@ -75,11 +77,18 @@ export function StudentsTable({ data = [], pageSize = 5 }) {
             <TableBody>
               {paginatedRows.map((row, rowIndex) => (
                 <TableRow key={rowIndex}>
-                  <TableCell>
-                    {row.firstName}, {row.lastName}
+                  <TableCell className="text-center">
+                    {row.lastName}, {row.firstName}
                   </TableCell>
                   <TableCell className="text-center">
-                    Action Placeholder
+                    <Link
+                      to={`/registrar/student-records/${
+                        department.shortName + yearLevel
+                      }/${row.lastName}-${row.firstName}`}
+                      state={{ student: row }}
+                    >
+                      <Button size="sm">View Grades</Button>
+                    </Link>
                   </TableCell>
                 </TableRow>
               ))}

@@ -13,6 +13,7 @@ import StudentRecords from "./pages/registrar/student-records";
 import NotFound from "./pages/not-found";
 import ReviewGrades from "./pages/registrar/review-grades";
 import Students from "./pages/registrar/department-students";
+import StudentGrades from "./pages/registrar/student-grades";
 
 const App = () => {
   const isLoggedIn = useMainStore((state) => state.isLoggedIn);
@@ -80,10 +81,18 @@ const App = () => {
               }
             />
             <Route
-              path="/registrar/student-records/:department/:yearLevel/:departmentId"
+              path="/registrar/student-records/:department"
               element={
                 <PageWrapper>
                   <Students />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path="/registrar/student-records/:department/:name"
+              element={
+                <PageWrapper>
+                  <StudentGrades />
                 </PageWrapper>
               }
             />

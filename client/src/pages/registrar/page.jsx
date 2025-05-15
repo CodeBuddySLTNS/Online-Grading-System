@@ -64,7 +64,6 @@ export function RegistrarDashboard() {
         <div className="w-full grid gap-6 md:grid-cols-2">
           <InsertSubjectForm />
           <InsertDepartmentSubjectForm />
-          <InsertStudentSubjectForm />
         </div>
       </main>
     </div>

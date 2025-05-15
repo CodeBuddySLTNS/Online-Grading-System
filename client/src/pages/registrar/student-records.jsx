@@ -30,10 +30,12 @@ const StudentRecords = () => {
         <Card className="w-full max-w-3xl mx-auto mt-4 shadow-lg rounded-xl">
           <CardHeader className="flex items-center gap-2">
             <Calendar className="w-5 h-5 text-primary" />
-            <CardTitle>
-              {departments && !depyear.department
-                ? "Select Department"
-                : depyear.department?.departmentName}
+            <CardTitle className="w-full flex justify-between items-center">
+              <div>
+                {departments && !depyear.department
+                  ? "Select Department"
+                  : depyear.department?.departmentName}
+              </div>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -57,7 +59,14 @@ const StudentRecords = () => {
               ) : departments && !depyear.year ? (
                 <>
                   <Link
-                    to={`/registrar/student-records/${depyear.department?.shortName}/1/${depyear.department?.departmentId}`}
+                    to={`/registrar/student-records/${
+                      depyear.department?.shortName +
+                      depyear.department?.departmentId
+                    }`}
+                    state={{
+                      department: depyear.department,
+                      yearLevel: 1,
+                    }}
                   >
                     <Button
                       variant="outline"
@@ -68,7 +77,14 @@ const StudentRecords = () => {
                   </Link>
 
                   <Link
-                    to={`/registrar/student-records/${depyear.department?.shortName}/2/${depyear.department?.departmentId}`}
+                    to={`/registrar/student-records/${
+                      depyear.department?.shortName +
+                      depyear.department?.departmentId
+                    }`}
+                    state={{
+                      department: depyear.department,
+                      yearLevel: 2,
+                    }}
                   >
                     <Button
                       variant="outline"
@@ -79,7 +95,14 @@ const StudentRecords = () => {
                   </Link>
 
                   <Link
-                    to={`/registrar/student-records/${depyear.department?.shortName}/3/${depyear.department?.departmentId}`}
+                    to={`/registrar/student-records/${
+                      depyear.department?.shortName +
+                      depyear.department?.departmentId
+                    }`}
+                    state={{
+                      department: depyear.department,
+                      yearLevel: 3,
+                    }}
                   >
                     <Button
                       variant="outline"
@@ -90,7 +113,14 @@ const StudentRecords = () => {
                   </Link>
 
                   <Link
-                    to={`/registrar/student-records/${depyear.department?.shortName}/4/${depyear.department?.departmentId}`}
+                    to={`/registrar/student-records/${
+                      depyear.department?.shortName +
+                      depyear.department?.departmentId
+                    }`}
+                    state={{
+                      department: depyear.department,
+                      yearLevel: 4,
+                    }}
                   >
                     <Button
                       variant="outline"
