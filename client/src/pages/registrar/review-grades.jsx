@@ -1,6 +1,5 @@
 import NavigateBack from "@/components/back";
 import { Header } from "@/components/header";
-import { SortablePaginatedTable } from "@/components/sortable-paginated-table";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -13,15 +12,26 @@ import {
 import { coleAPI } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { CheckCircle, FileText } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { toast } from "sonner";
 
 const ReviewGrades = () => {
   const grades = useLocation().state;
   const [isApproved, setApproved] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
-  console.log(grades);
+  const totalPages = Math.ceil(grades?.students?.length / itemsPerPage) || 1;
+
+  const paginatedStudents = grades?.students?.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [grades]);
 
   const { mutateAsync: approve } = useMutation({
     mutationFn: coleAPI("/grades/approve", "POST"),
@@ -37,25 +47,15 @@ const ReviewGrades = () => {
       setApproved(true);
     },
     onError: (e) => {
-      if (e.response?.data?.message) {
-        toast("Error!", {
-          description: e.response?.data?.message,
-          style: {
-            fontSize: "1rem",
-            backgroundColor: "#f8d7da",
-            color: "#721c24",
-          },
-        });
-      } else {
-        toast("Error!", {
-          description: "Unable to connect to the server.",
-          style: {
-            fontSize: "1rem",
-            backgroundColor: "#f8d7da",
-            color: "#721c24",
-          },
-        });
-      }
+      toast("Error!", {
+        description:
+          e.response?.data?.message || "Unable to connect to the server.",
+        style: {
+          fontSize: "1rem",
+          backgroundColor: "#f8d7da",
+          color: "#721c24",
+        },
+      });
     },
   });
 
@@ -118,7 +118,7 @@ const ReviewGrades = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {grades?.students?.map((grade, index) => (
+              {paginatedStudents?.map((grade, index) => (
                 <TableRow key={index}>
                   <TableCell>{grade.studentName}</TableCell>
                   <TableCell className="text-center">{grade.prelim}</TableCell>
@@ -132,6 +132,30 @@ const ReviewGrades = () => {
               ))}
             </TableBody>
           </Table>
+
+          <div className="flex justify-center gap-4 py-4">
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            >
+              Previous
+            </Button>
+            <p className="text-sm mt-1">
+              Page {currentPage} of {totalPages}
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={currentPage === totalPages}
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+            >
+              Next
+            </Button>
+          </div>
         </div>
       </div>
     </div>

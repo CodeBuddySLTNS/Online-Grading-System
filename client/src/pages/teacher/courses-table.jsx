@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import {
   Table,
@@ -10,7 +11,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { BookOpen, ChevronLeft } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import NavigateBack from "@/components/back";
 
 export function CourseTable({
@@ -19,6 +20,20 @@ export function CourseTable({
   department,
   year,
 }) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const totalPages = Math.ceil(courses.length / itemsPerPage);
+
+  const paginatedCourses = courses.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [courses]);
+
   return (
     <div className="w-full flex flex-col justify-center items-center">
       <NavigateBack />
@@ -41,8 +56,8 @@ export function CourseTable({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {courses.length > 0 ? (
-                  courses.map((course) => (
+                {paginatedCourses.length > 0 ? (
+                  paginatedCourses.map((course) => (
                     <TableRow key={course.subjectId}>
                       <TableCell className="whitespace-nowrap">
                         {course.code}
@@ -76,6 +91,30 @@ export function CourseTable({
                 )}
               </TableBody>
             </Table>
+          </div>
+
+          <div className="flex justify-center gap-4 py-4">
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            >
+              Previous
+            </Button>
+            <p className="text-sm mt-1">
+              Page {currentPage} of {totalPages}
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={currentPage === totalPages}
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+            >
+              Next
+            </Button>
           </div>
         </CardContent>
       </Card>

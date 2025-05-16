@@ -177,6 +177,7 @@ const Grades = {
       SELECT 
         g.yearLevel,
         s.subjectName,
+        ds.semester,
         g.prelim,
         g.midterm,
         g.semifinal,
@@ -186,6 +187,9 @@ const Grades = {
         sy.schoolYearName
       FROM grades g
       JOIN subjects s ON g.subjectId = s.subjectId
+      JOIN departmentSubjects ds ON g.subjectId = ds.subjectId
+        AND g.departmentId =  ds.departmentId
+        AND g.yearLevel = ds.yearLevel
       JOIN schoolYears sy ON g.schoolYearId = sy.schoolYearId
       WHERE g.studentId = ?
         AND g.isApproved = true

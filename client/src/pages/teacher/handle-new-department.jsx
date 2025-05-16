@@ -137,7 +137,10 @@ export default function TeacherDepartmentSelector() {
   return (
     <div>
       <Header />
-      <div>
+      <div
+        className="h-full bg-white"
+        style={{ backgroundColor: "rgba(255,255,255,0.5)" }}
+      >
         <div className="max-w-md mx-auto pt-8 px-0 space-y-6">
           <NavigateBack />
         </div>

@@ -9,11 +9,12 @@ import {
 } from "../ui/table";
 import { coleAPI } from "@/lib/utils";
 import { Input } from "../ui/input";
-import { useEffect, useState } from "react";
-import { Check, X, User } from "lucide-react";
+import { useState } from "react";
+import { Check, X } from "lucide-react";
 import { useMainStore } from "@/states/store";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { User } from "lucide-react";
 import NavigateBack from "@/components/back";
 import { toast } from "sonner";
 
@@ -36,25 +37,12 @@ const StudentsGrades = ({
     final: "",
   });
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-
-  const { data: students = [] } = useQuery({
+  const { data: students } = useQuery({
     queryKey: ["students"],
     queryFn: coleAPI(
       `/students/withgrades?departmentId=${departmentId}&yearLevel=${year}&subjectId=${subject.subjectId}&schoolYearId=${sy}&teacherId=${user.userId}`
     ),
   });
-
-  const totalPages = Math.ceil(students.length / itemsPerPage);
-  const paginatedStudents = students.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [students]);
 
   const { mutateAsync: saveGrade } = useMutation({
     mutationFn: coleAPI("/grades/add", "POST"),
@@ -74,6 +62,7 @@ const StudentsGrades = ({
   const { mutateAsync: submitGrades } = useMutation({
     mutationFn: coleAPI("/grades/submit", "POST"),
     onSuccess: (data) => {
+      console.log(data);
       toast("Success!", {
         description:
           data?.changedRows === 0
@@ -88,15 +77,25 @@ const StudentsGrades = ({
       setSubmitted(true);
     },
     onError: (e) => {
-      toast("Error!", {
-        description:
-          e.response?.data?.message || "Unable to connect to the server.",
-        style: {
-          fontSize: "1rem",
-          backgroundColor: "#f8d7da",
-          color: "#721c24",
-        },
-      });
+      if (e.response?.data?.message) {
+        toast("Error!", {
+          description: e.response?.data?.message,
+          style: {
+            fontSize: "1rem",
+            backgroundColor: "#f8d7da",
+            color: "#721c24",
+          },
+        });
+      } else {
+        toast("Error!", {
+          description: "Unable to connect to the server.",
+          style: {
+            fontSize: "1rem",
+            backgroundColor: "#f8d7da",
+            color: "#721c24",
+          },
+        });
+      }
     },
   });
 
@@ -130,11 +129,14 @@ const StudentsGrades = ({
       subjectId: subject.subjectId,
       schoolYearId: Number(sy),
     };
+
     try {
       await submitGrades(body);
     } catch (error) {
       console.log(error);
     }
+
+    console.log(body);
   };
 
   const handleSaveChanges = async () => {
@@ -152,6 +154,7 @@ const StudentsGrades = ({
       final: Number(edit.final),
       average: average,
     };
+
     try {
       await saveGrade(body);
     } catch (error) {
@@ -159,14 +162,16 @@ const StudentsGrades = ({
     }
   };
 
-  const handleDiscardChanges = () => {
-    setEdit({
-      studentId: "",
-      prelim: "",
-      midterm: "",
-      semifinal: "",
-      final: "",
-    });
+  const handleDiscardChanges = (student) => {
+    if (student.studentId !== edit.studentId) {
+      setEdit({
+        studentId: "",
+        prelim: "",
+        midterm: "",
+        semifinal: "",
+        final: "",
+      });
+    }
   };
 
   return (
@@ -194,17 +199,29 @@ const StudentsGrades = ({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead className="text-center">Prelim</TableHead>
-                <TableHead className="text-center">Midterm</TableHead>
-                <TableHead className="text-center">Semifinal</TableHead>
-                <TableHead className="text-center">Final</TableHead>
-                <TableHead className="text-center">Average</TableHead>
+                <TableHead>
+                  <p>Name</p>
+                </TableHead>
+                <TableHead>
+                  <p className="text-center">Prelim</p>
+                </TableHead>
+                <TableHead>
+                  <p className="text-center">Midterm</p>
+                </TableHead>
+                <TableHead>
+                  <p className="text-center">Semifinal</p>
+                </TableHead>
+                <TableHead>
+                  <p className="text-center">Final</p>
+                </TableHead>
+                <TableHead>
+                  <p className="text-center">Average</p>
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {paginatedStudents.length > 0 ? (
-                paginatedStudents.map((student, index) => (
+              {students?.length > 0 ? (
+                students.map((student, index) => (
                   <TableRow
                     key={index}
                     className="cursor-pointer"
@@ -213,34 +230,96 @@ const StudentsGrades = ({
                     <TableCell>
                       {student.lastName}, {student.firstName}
                     </TableCell>
-                    {["prelim", "midterm", "semifinal", "final"].map((term) => (
-                      <TableCell key={term}>
-                        {edit.studentId === student.studentId ? (
-                          <Input
-                            value={edit[term] || ""}
-                            className="w-full disabled:text-black disabled:opacity-100"
-                            type="number"
-                            min={1}
-                            max={5}
-                            onChange={(e) =>
-                              setEdit((prev) => ({
-                                ...prev,
-                                [term]: e.target.value,
-                              }))
-                            }
-                          />
-                        ) : (
-                          <p className="text-center">
-                            {student[term] || "0.0"}
-                          </p>
-                        )}
-                      </TableCell>
-                    ))}
+                    <TableCell>
+                      {student.studentId === edit.studentId ? (
+                        <Input
+                          value={edit.prelim || ""}
+                          className="w-full disabled:text-black disabled:opacity-100"
+                          type="number"
+                          min={1}
+                          max={5}
+                          onChange={(e) =>
+                            setEdit((prev) => ({
+                              ...prev,
+                              prelim: e.target.value,
+                            }))
+                          }
+                        />
+                      ) : (
+                        <p className="text-center">{student.prelim || "0.0"}</p>
+                      )}
+                    </TableCell>
+
+                    <TableCell>
+                      {student.studentId === edit.studentId ? (
+                        <Input
+                          value={edit.midterm || ""}
+                          className="w-full disabled:text-black disabled:opacity-100"
+                          type="number"
+                          min={1}
+                          max={5}
+                          onChange={(e) =>
+                            setEdit((prev) => ({
+                              ...prev,
+                              midterm: e.target.value,
+                            }))
+                          }
+                        />
+                      ) : (
+                        <p className="text-center">
+                          {student.midterm || "0.0"}
+                        </p>
+                      )}
+                    </TableCell>
+
+                    <TableCell>
+                      {student.studentId === edit.studentId ? (
+                        <Input
+                          value={edit.semifinal || ""}
+                          className="w-full disabled:text-black disabled:opacity-100"
+                          type="number"
+                          min={1}
+                          max={5}
+                          onChange={(e) =>
+                            setEdit((prev) => ({
+                              ...prev,
+                              semifinal: e.target.value,
+                            }))
+                          }
+                        />
+                      ) : (
+                        <p className="text-center">
+                          {student.semifinal || "0.0"}
+                        </p>
+                      )}
+                    </TableCell>
+
+                    <TableCell>
+                      {student.studentId === edit.studentId ? (
+                        <Input
+                          value={edit.final || ""}
+                          className="w-full disabled:text-black disabled:opacity-100"
+                          type="number"
+                          min={1}
+                          max={5}
+                          onChange={(e) =>
+                            setEdit((prev) => ({
+                              ...prev,
+                              final: e.target.value,
+                            }))
+                          }
+                        />
+                      ) : (
+                        <p className="text-center">{student.final || "0.0"}</p>
+                      )}
+                    </TableCell>
+
                     <TableCell className="text-center">
-                      {edit.studentId === student.studentId
+                      {student.studentId === edit.studentId
                         ? getAverage()
                         : student.average || "0.0"}
                     </TableCell>
+
                     {edit.studentId === student.studentId && (
                       <TableCell className="w-3 mx-0 px-0">
                         <div className="flex gap-2">
@@ -259,37 +338,11 @@ const StudentsGrades = ({
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={7} className="py-4 text-center">
-                    No students.
-                  </TableCell>
+                  <TableCell>No students</TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
-
-          <div className="flex justify-center gap-4 py-4">
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            >
-              Previous
-            </Button>
-            <p className="text-sm mt-1">
-              Page {currentPage} of {totalPages || 1}
-            </p>
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={currentPage === totalPages || totalPages === 0}
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-            >
-              Next
-            </Button>
-          </div>
         </CardContent>
       </Card>
     </div>
