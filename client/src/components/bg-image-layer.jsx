@@ -1,4 +1,4 @@
-import bgImage from "@/assets/paclogo.png";
+import bgImage from "/images/paclogo.png";
 
 const BgImageLayer = () => {
   return (

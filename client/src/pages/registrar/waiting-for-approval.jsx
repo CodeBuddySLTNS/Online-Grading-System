@@ -13,19 +13,21 @@ export default function PendingGrades() {
   return (
     <div>
       <Header />
-      <div className="min-h-screen p-4 bg-bac]">
+      <div className="min-h-screen p-4">
         <NavigateBack />
-        {grades?.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {grades?.map((gradeGroup, index) => (
-              <PendingCard key={index} grade={gradeGroup} />
-            ))}
-          </div>
-        ) : (
-          <div className="min-h-[40vh] flex items-center justify-center text-muted-foreground">
-            No pending grades at the moment.
-          </div>
-        )}
+        <div className="max-w-5xl mx-auto">
+          {grades?.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {grades?.map((gradeGroup, index) => (
+                <PendingCard key={index} grade={gradeGroup} />
+              ))}
+            </div>
+          ) : (
+            <div className="min-h-[40vh] flex items-center justify-center text-muted-foreground">
+              No pending grades at the moment.
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

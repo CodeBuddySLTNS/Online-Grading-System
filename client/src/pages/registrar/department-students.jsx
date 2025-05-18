@@ -33,7 +33,13 @@ const Students = () => {
               </div>
             </div>
           </div>
-          <StudentsTable data={students} pageSize={10} />
+          {students?.length > 0 ? (
+            <StudentsTable data={students} pageSize={10} />
+          ) : (
+            <div className="h-40 flex justify-center items-center border rounded-lg">
+              No students in this department.
+            </div>
+          )}
         </div>
       </div>
     </div>

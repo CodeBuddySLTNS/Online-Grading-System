@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import bgImage from "@/assets/paclogo.png";
+import bgImage from "/images/paclogo.png";
 import { useMainStore } from "@/states/store";
 import { LogOut } from "lucide-react";
 
