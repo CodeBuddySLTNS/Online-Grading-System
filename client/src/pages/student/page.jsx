@@ -1,27 +1,28 @@
 import { Header } from "@/components/header";
+import StudentGradeTable from "@/components/student/student-grade-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-} from "@/components/ui/table";
 import { coleAPI, yearLevelText } from "@/lib/utils";
+import { useMainStore } from "@/states/store";
 import { useQuery } from "@tanstack/react-query";
-import { User, BookOpen, School } from "lucide-react";
+import { User, School } from "lucide-react";
 
 export default function StudentPortal() {
+  const user = useMainStore((state) => state.user);
+
   const { data: student } = useQuery({
     queryKey: ["user"],
     queryFn: coleAPI("/users/user/me"),
   });
 
+  const { data: grades } = useQuery({
+    queryKey: ["grades"],
+    queryFn: coleAPI("/grades/student?studentId=" + user.userId),
+  });
+
   return (
     <div>
       <Header />
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mb-10 space-y-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <div className="flex items-center gap-3">
             <User className="w-10 h-10 text-primary shrink-0" />
@@ -36,7 +37,10 @@ export default function StudentPortal() {
           </div>
         </div>
 
-        <Card className="shadow-lg rounded-2xl gap-2.5">
+        <Card
+          className="shadow-lg rounded-2xl gap-2.5"
+          style={{ backgroundColor: "rgba(255,255,255,0.75)" }}
+        >
           <CardHeader>
             <div className="flex items-center gap-2">
               <School className="w-5 h-5 text-primary" />
@@ -64,37 +68,7 @@ export default function StudentPortal() {
           </CardContent>
         </Card>
 
-        <Card className="shadow-lg rounded-2xl gap-1">
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-primary" />
-              <CardTitle>Enrolled Courses</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="overflow-x-auto">
-              <Table className="min-w-full">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Course Code</TableHead>
-                    <TableHead>Course Title</TableHead>
-                    <TableHead>Grade</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  <TableRow>
-                    <TableCell
-                      colSpan={3}
-                      className="text-center text-muted-foreground"
-                    >
-                      No courses enrolled yet.
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </div>
-          </CardContent>
-        </Card>
+        <StudentGradeTable grades={grades} />
       </div>
     </div>
   );
