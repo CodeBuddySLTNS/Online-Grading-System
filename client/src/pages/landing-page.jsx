@@ -14,8 +14,11 @@ export default function LandingPage() {
       ) : auth === "signup" ? (
         <SignupPage setAuth={setAuth} />
       ) : (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-white to-slate-100 px-4">
-          <Card className="max-w-md w-full shadow-xl rounded-2xl">
+        <div className="min-h-screen flex flex-col items-center justify-center px-4">
+          <Card
+            className="max-w-md w-full shadow-xl rounded-2xl"
+            style={{ backgroundColor: "rgba(255,255,255,0.75)" }}
+          >
             <CardHeader>
               <CardTitle className="text-center text-3xl font-bold">
                 Online Grading System
@@ -23,7 +26,7 @@ export default function LandingPage() {
             </CardHeader>
             <CardContent>
               <p className="text-center text-gray-600 mb-6">
-                Effortless grading, tracking, and reporting for educators and
+                Streamlined grading, tracking, and reporting for educators and
                 students.
               </p>
               <div className="flex flex-col gap-4">

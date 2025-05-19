@@ -21,7 +21,10 @@ const Students = () => {
       <Header />
       <div className="p-4">
         <NavigateBack />
-        <div className="md:w-[80%] p-4 border rounded-lg shadow-sm bg-white dark:bg-muted mt-4 mx-auto">
+        <div
+          className="md:w-[80%] p-4 border rounded-lg shadow-sm dark:bg-muted mt-4 mx-auto"
+          style={{ backgroundColor: "rgba(255,255,255,0.75)" }}
+        >
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
             <div className="flex items-center gap-3">
               <FileText className="w-6 h-6 text-primary shrink-0" />

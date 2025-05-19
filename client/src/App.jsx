@@ -66,7 +66,7 @@ const App = () => {
               }
             />
             <Route
-              path="/teacher/subjects/students/:sy/:departmentShortName/:yearLevel/:departmentId"
+              path="/teacher/subjects/students"
               element={
                 <PageWrapper>
                   <DepartmentStudents />

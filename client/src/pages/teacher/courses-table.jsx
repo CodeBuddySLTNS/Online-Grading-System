@@ -37,7 +37,10 @@ export function CourseTable({
   return (
     <div className="w-full flex flex-col justify-center items-center">
       <NavigateBack />
-      <Card className="w-full px-4 max-w-5xl shadow-lg rounded-2xl gap-4">
+      <Card
+        className="w-full px-4 max-w-5xl shadow-lg rounded-2xl gap-4"
+        style={{ backgroundColor: "rgba(255,255,255,0.75)" }}
+      >
         <CardHeader className="flex items-center gap-2 px-4 sm:px-6">
           <BookOpen className="w-5 h-5 text-primary" />
           <CardTitle className="text-lg sm:text-xl">

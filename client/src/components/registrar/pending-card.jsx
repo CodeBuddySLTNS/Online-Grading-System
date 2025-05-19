@@ -13,7 +13,10 @@ const PendingCard = ({ grade }) => {
   const navigate = useNavigate();
 
   return (
-    <Card className="rounded-2xl shadow-md hover:shadow-lg transition-transform hover:-translate-y-1 gap-2.5">
+    <Card
+      className="rounded-2xl shadow-md hover:shadow-lg transition-transform hover:-translate-y-1 gap-2.5"
+      style={{ backgroundColor: "rgba(255,255,255,0.75)" }}
+    >
       <CardHeader className="flex flex-col gap-2">
         <CardTitle className="text-lg flex items-center gap-2 text-yellow-600">
           <Clock className="w-5 h-5" />

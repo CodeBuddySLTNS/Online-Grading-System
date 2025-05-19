@@ -73,7 +73,10 @@ const InsertSubjectForm = () => {
   };
 
   return (
-    <Card className="w-full mx-auto shadow-lg rounded-2xl gap-3">
+    <Card
+      className="w-full mx-auto shadow-lg rounded-2xl gap-3"
+      style={{ backgroundColor: "rgba(255,255,255,0.75)" }}
+    >
       <CardHeader>
         <div className="flex items-center gap-2">
           <BookOpen className="w-6 h-6 text-primary" />

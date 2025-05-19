@@ -27,7 +27,10 @@ const StudentRecords = () => {
               : null
           }
         />
-        <Card className="w-full max-w-3xl mx-auto mt-4 shadow-lg rounded-xl">
+        <Card
+          className="w-full max-w-3xl mx-auto mt-4 shadow-lg rounded-xl"
+          style={{ backgroundColor: "rgba(255,255,255,0.75)" }}
+        >
           <CardHeader className="flex items-center gap-2">
             <Calendar className="w-5 h-5 text-primary" />
             <CardTitle className="w-full flex justify-between items-center">

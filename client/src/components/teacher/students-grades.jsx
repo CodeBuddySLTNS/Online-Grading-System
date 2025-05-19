@@ -172,7 +172,10 @@ const StudentsGrades = ({
   return (
     <div className="w-full flex flex-col justify-center items-center">
       <NavigateBack onBackFn={() => setSubject("")} />
-      <Card className="w-full max-w-5xl shadow-lg rounded-2xl gap-4">
+      <Card
+        className="w-full max-w-5xl shadow-lg rounded-2xl gap-4"
+        style={{ backgroundColor: "rgba(255,255,255,0.75)" }}
+      >
         <CardHeader className="flex justify-between">
           <div className="flex items-center gap-2">
             <User className="w-6 h-6 text-primary" />

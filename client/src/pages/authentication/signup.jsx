@@ -90,8 +90,11 @@ export default function SignupPage({ setAuth }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-white to-slate-100 px-4">
-      <Card className="max-w-xl w-full shadow-xl rounded-2xl gap-4">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4">
+      <Card
+        className="max-w-xl w-full shadow-xl rounded-2xl gap-4"
+        style={{ backgroundColor: "rgba(255,255,255,0.75)" }}
+      >
         <CardHeader>
           <CardTitle className="text-center text-2xl font-bold">
             Sign Up

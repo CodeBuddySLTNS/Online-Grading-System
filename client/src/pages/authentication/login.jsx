@@ -67,8 +67,11 @@ export default function LoginPage({ setAuth }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-white to-slate-100 px-4">
-      <Card className="max-w-md w-full shadow-xl rounded-2xl gap-2">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4">
+      <Card
+        className="max-w-md w-full shadow-xl rounded-2xl gap-2"
+        style={{ backgroundColor: "rgba(255,255,255,0.75)" }}
+      >
         <CardHeader>
           <CardTitle className="text-center text-3xl font-bold">
             Login

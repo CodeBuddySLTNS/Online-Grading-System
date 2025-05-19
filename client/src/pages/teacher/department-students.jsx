@@ -1,14 +1,15 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
 import { Header } from "@/components/header";
 import { CourseTable } from "./courses-table";
 import { coleAPI } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useMainStore } from "@/states/store";
 import StudentsGrades from "@/components/teacher/students-grades";
+import { useLocation } from "react-router-dom";
 
 export default function DepartmentStudents() {
-  const { departmentId, yearLevel, departmentShortName, sy } = useParams();
+  const { departmentId, yearLevel, departmentShortName, sy } =
+    useLocation().state;
   const [subject, setSubject] = useState(null);
   const user = useMainStore((state) => state.user);
 

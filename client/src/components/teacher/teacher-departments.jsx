@@ -39,6 +39,7 @@ export default function DepartmentsPage({ sy }) {
               {deptList.map((dept) => (
                 <Card
                   key={dept.departmentId}
+                  style={{ backgroundColor: "rgba(255,255,255,0.75)" }}
                   className="rounded-2xl shadow-md transition-transform transform hover:-translate-y-1 hover:shadow-lg cursor-pointer"
                 >
                   <CardHeader className="flex-1">
@@ -48,7 +49,13 @@ export default function DepartmentsPage({ sy }) {
                   </CardHeader>
                   <CardContent>
                     <Link
-                      to={`/teacher/subjects/students/${sy}/${dept.short}/${yearLevel}/${dept.departmentId}`}
+                      to={`/teacher/subjects/students`}
+                      state={{
+                        departmentId: dept.departmentId,
+                        departmentShortName: dept.short,
+                        yearLevel,
+                        sy,
+                      }}
                     >
                       <Button variant="default" className="w-full">
                         View Department
