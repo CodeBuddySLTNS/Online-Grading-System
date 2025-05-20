@@ -35,7 +35,6 @@ const App = () => {
 
   useEffect(() => {
     if (user) {
-      console.log(user);
       useMainStore.getState().setUser(user);
       useMainStore.getState().setIsLoggedIn(true);
     }

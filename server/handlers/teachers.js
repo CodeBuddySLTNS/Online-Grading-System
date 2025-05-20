@@ -8,7 +8,6 @@ const teachers = async (req, res) => {
 const teachersById = async (req, res) => {
   const { id: teacherId, sy: schoolYearId } = req.query;
   const teacher = await Teacher.getTeacherById(teacherId, schoolYearId);
-  console.log(teacher);
   res.send(teacher);
 };
 
@@ -27,8 +26,6 @@ const departmentSubjects = async (req, res) => {
 const addTeacherDepartment = async (req, res) => {
   const { teacherId, departmentId, yearLevel, subjectId, schoolYearId } =
     req.body;
-
-  console.log(req.body);
 
   await Teacher.addTeacherDepartment(
     teacherId,

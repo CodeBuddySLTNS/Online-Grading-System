@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(authenticate);
-app.use((req, res, next) => (console.log(req.path, req.method), next()));
+// app.use((req, res, next) => (console.log(req.path, req.method), next()));
 
 app.use("/auth", require("./routes/auth"));
 app.use("/users", require("./routes/users"));

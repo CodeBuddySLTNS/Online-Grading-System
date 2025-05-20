@@ -62,7 +62,6 @@ const StudentsGrades = ({
   const { mutateAsync: submitGrades } = useMutation({
     mutationFn: coleAPI("/grades/submit", "POST"),
     onSuccess: (data) => {
-      console.log(data);
       toast("Success!", {
         description:
           data?.changedRows === 0
@@ -135,8 +134,6 @@ const StudentsGrades = ({
     } catch (error) {
       console.log(error);
     }
-
-    console.log(body);
   };
 
   const handleSaveChanges = async () => {

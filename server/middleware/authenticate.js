@@ -22,7 +22,6 @@ const authenticate = async (req, res, next) => {
               .status(status.FORBIDDEN)
               .json({ message: "Invalid token" });
           }
-          console.log("valid token", verifiedToken);
           res.locals.userId = verifiedToken.userId;
           next();
         });

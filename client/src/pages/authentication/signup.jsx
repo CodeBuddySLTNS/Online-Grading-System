@@ -41,7 +41,6 @@ export default function SignupPage({ setAuth }) {
   const { mutateAsync: signup, isPending } = useMutation({
     mutationFn: coleAPI("/auth/signup", "POST"),
     onSuccess: (data) => {
-      console.log(data);
       localStorage.setItem("token", data.token);
       useMainStore.getState().setUser(data.user);
       useMainStore.getState().setIsLoggedIn(true);

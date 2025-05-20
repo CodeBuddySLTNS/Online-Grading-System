@@ -57,7 +57,7 @@ const Teacher = {
       LEFT JOIN departments d ON td.departmentId = d.departmentId
       WHERE t.teacherId = ?
     `;
-    console.log(schoolYearId);
+
     const results = await sqlQuery(query, [schoolYearId, teacherId]);
 
     const grouped = results.reduce((acc, row) => {
