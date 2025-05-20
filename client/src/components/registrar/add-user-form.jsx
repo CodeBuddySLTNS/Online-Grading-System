@@ -69,7 +69,10 @@ export default function AddUserForm() {
   const roleValue = watch("role");
 
   return (
-    <Card className="w-full">
+    <Card
+      className="w-full"
+      style={{ backgroundColor: "rgba(255,255,255,0.75)" }}
+    >
       <CardHeader>
         <CardTitle>Add New User</CardTitle>
       </CardHeader>
