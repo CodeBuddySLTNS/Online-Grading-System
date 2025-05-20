@@ -13,12 +13,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { BookOpen } from "lucide-react";
 import NavigateBack from "@/components/back";
+import HandleNewSubject from "./handle-new-subject";
 
 export function CourseTable({
   courses = [],
   onViewStudents,
+  departmentId,
   department,
   year,
+  sy,
 }) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -43,8 +46,11 @@ export function CourseTable({
       >
         <CardHeader className="flex items-center gap-2 px-4 sm:px-6">
           <BookOpen className="w-5 h-5 text-primary" />
-          <CardTitle className="text-lg sm:text-xl">
-            Course List ({department}-{year})
+          <CardTitle className="w-full flex justify-between">
+            <div className="text-lg sm:text-xl">
+              Course List ({department}-{year})
+            </div>
+            <HandleNewSubject departmentId={departmentId} year={year} sy={sy} />
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">

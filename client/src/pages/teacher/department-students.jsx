@@ -36,8 +36,10 @@ export default function DepartmentStudents() {
         ) : (
           <CourseTable
             courses={subjects}
+            departmentId={departmentId}
             department={departmentShortName}
             year={yearLevel}
+            sy={sy}
             onViewStudents={(data) => setSubject(data)}
           />
         )}

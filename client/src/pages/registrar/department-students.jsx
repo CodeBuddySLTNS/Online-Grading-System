@@ -1,6 +1,7 @@
 import NavigateBack from "@/components/back";
 import { Header } from "@/components/header";
 import { StudentsTable } from "@/components/registrar/students-table";
+import { Button } from "@/components/ui/button";
 import { coleAPI } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { FileText } from "lucide-react";

@@ -14,9 +14,7 @@ const PageWrapper = ({ children }) => {
           user?.role === "student" ||
           user?.role === "registrar")) ||
       (location.pathname.startsWith("/registrar") &&
-        (user?.role === "admin" ||
-          user?.role === "student" ||
-          user?.role === "teacher"))
+        (user?.role === "student" || user?.role === "teacher"))
     ) {
       navigate("/");
     }

@@ -123,7 +123,7 @@ export default function StudentGradeTable({ grades = [] }) {
             </Table>
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground text-center py-8">
             No grades found for the selected filters.
           </p>
         )}

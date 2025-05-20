@@ -140,8 +140,7 @@ const InsertStudentSubjectForm = () => {
 
   const onSubmit = async (data) => {
     try {
-      console.log(data);
-      // await addDepartmentSubject(data);
+      await addDepartmentSubject(data);
     } catch (error) {
       console.log(error);
     }

@@ -40,7 +40,7 @@ export default function DepartmentsPage({ sy }) {
                 <Card
                   key={dept.departmentId}
                   style={{ backgroundColor: "rgba(255,255,255,0.75)" }}
-                  className="rounded-2xl shadow-md transition-transform transform hover:-translate-y-1 hover:shadow-lg cursor-pointer"
+                  className="rounded-2xl shadow-md transition-transform transform hover:-translate-y-1 hover:shadow-lg"
                 >
                   <CardHeader className="flex-1">
                     <CardTitle className="poppins">
@@ -57,7 +57,10 @@ export default function DepartmentsPage({ sy }) {
                         sy,
                       }}
                     >
-                      <Button variant="default" className="w-full">
+                      <Button
+                        variant="default"
+                        className="w-full cursor-pointer"
+                      >
                         View Department
                       </Button>
                     </Link>

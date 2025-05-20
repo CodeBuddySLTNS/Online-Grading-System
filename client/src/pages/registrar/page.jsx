@@ -10,6 +10,7 @@ import InsertDepartmentSubjectForm from "@/components/registrar/insert-departmen
 import { Separator } from "@/components/ui/separator";
 import AddSchoolYear from "@/components/registrar/add-school-year";
 import InsertStudentSubjectForm from "@/components/registrar/insert-student-subject";
+import AddUserForm from "@/components/registrar/add-user-form";
 
 export function RegistrarDashboard() {
   const navigate = useNavigate();
@@ -66,6 +67,12 @@ export function RegistrarDashboard() {
         <div className="w-full grid gap-6 md:grid-cols-2">
           <InsertSubjectForm />
           <InsertDepartmentSubjectForm />
+        </div>
+
+        <Separator className="my-7" />
+
+        <div className="w-full grid gap-6 md:grid-cols-2">
+          <AddUserForm />
         </div>
       </main>
     </div>

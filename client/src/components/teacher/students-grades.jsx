@@ -233,16 +233,14 @@ const StudentsGrades = ({
                             }
                           />
                         ) : (
-                          <p className="text-center">
-                            {student[term] || "0.0"}
-                          </p>
+                          <p className="text-center">{student[term] || "-"}</p>
                         )}
                       </TableCell>
                     ))}
                     <TableCell className="text-center">
                       {edit.studentId === student.studentId
                         ? getAverage()
-                        : student.average || "0.0"}
+                        : student.average || "-"}
                     </TableCell>
                     {edit.studentId === student.studentId && (
                       <TableCell className="w-3 mx-0 px-0">

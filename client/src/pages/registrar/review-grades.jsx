@@ -10,14 +10,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { coleAPI } from "@/lib/utils";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckCircle, FileText } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { toast } from "sonner";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 const ReviewGrades = () => {
   const grades = useLocation().state;
+  const queryClient = useQueryClient();
   const [isApproved, setApproved] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -29,11 +32,23 @@ const ReviewGrades = () => {
     currentPage * itemsPerPage
   );
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [grades]);
+  const { data: depgrades } = useQuery({
+    queryKey: ["depstudents"],
+    queryFn: coleAPI(
+      `/grades/department?teacherId=${grades?.teacherId}&departmentId=${grades?.departmentId}&yearLevel=${grades?.yearLevel}&subjectId=${grades?.subjectId}&schoolYearId=${grades?.schoolYearId}`
+    ),
+  });
 
-  const { mutateAsync: approve } = useMutation({
+  const jsondata = depgrades?.map((s) => ({
+    Name: s.studentName,
+    Prelim: s.prelim,
+    Midterm: s.midterm,
+    Semifinal: s.semifinal,
+    Final: s.final,
+    Average: s.average,
+  }));
+
+  const { mutateAsync: approve, isPending } = useMutation({
     mutationFn: coleAPI("/grades/approve", "POST"),
     onSuccess: () => {
       toast("Success!", {
@@ -45,6 +60,36 @@ const ReviewGrades = () => {
         },
       });
       setApproved(true);
+
+      const worksheet = XLSX.utils.json_to_sheet(jsondata);
+
+      worksheet["!cols"] = [
+        { wch: 30 },
+        { wch: 10 },
+        { wch: 10 },
+        { wch: 10 },
+        { wch: 10 },
+        { wch: 10 },
+      ];
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet);
+
+      const excelBuffer = XLSX.write(workbook, {
+        bookType: "xlsx",
+        type: "array",
+      });
+
+      const data = new Blob([excelBuffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      saveAs(
+        data,
+        `${grades.departmentShort + grades.yearLevel} - ${
+          grades.subjectCode
+        }.xlsx`
+      );
     },
     onError: (e) => {
       toast("Error!", {
@@ -58,6 +103,13 @@ const ReviewGrades = () => {
       });
     },
   });
+
+  useEffect(() => {
+    if (grades) {
+      setCurrentPage(1);
+      queryClient.invalidateQueries(["depstudents"]);
+    }
+  }, [grades, queryClient]);
 
   const handleApprove = async () => {
     try {
@@ -102,7 +154,13 @@ const ReviewGrades = () => {
               onClick={handleApprove}
             >
               <CheckCircle className="w-4 h-4 md:w-5 md:h-5" />
-              <span>{isApproved ? "Approved" : "Approve"}</span>
+              <span>
+                {isPending
+                  ? "processing..."
+                  : isApproved
+                  ? "Approved"
+                  : "Approve"}
+              </span>
             </Button>
           </div>
 
