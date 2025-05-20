@@ -154,9 +154,9 @@ const Grades = {
 
   getAllPendingGrades: async () => {
     const query = `
-     SELECT g.gradeId, g.studentId, CONCAT(u.firstName, ' ', u.lastName) AS studentName,
+     SELECT g.gradeId, g.studentId, CONCAT(u.lastName, ', ', u.firstName) AS studentName,
         g.teacherId, CONCAT(tu.firstName, ' ', tu.lastName) AS teacherName,
-        g.departmentId, d.departmentName, d.shortName AS departmentShort, g.yearLevel, g.subjectId, s.subjectName,
+        g.departmentId, d.departmentName, d.shortName AS departmentShort, g.yearLevel, g.subjectId, s.code, s.subjectName,
         ds.semester, g.schoolYearId, sy.schoolYearName, g.prelim, g.midterm, g.semifinal, g.final, g.average,
         g.isApproved, g.IsSubmitted
       FROM grades g
@@ -212,6 +212,36 @@ const Grades = {
       JOIN schoolYears sy ON sy.schoolYearId = g.schoolYearId
       WHERE g.gradeId = ?`;
     return (await sqlQuery(query, [gradeId]))[0];
+  },
+
+  getGradesByDepartment: async ({
+    teacherId,
+    departmentId,
+    yearLevel,
+    subjectId,
+    schoolYearId,
+  }) => {
+    const query = `
+    SELECT g.gradeId, g.studentId, CONCAT(u.firstName, ' ', u.lastName) AS studentName,
+      g.teacherId, CONCAT(tu.firstName, ' ', tu.lastName) AS teacherName,
+      g.departmentId, d.departmentName, g.yearLevel, g.subjectId, s.subjectName,
+      g.schoolYearId, sy.schoolYearName, g.prelim, g.midterm, g.semifinal, g.final, g.average,
+      g.isApproved, g.isSubmitted
+    FROM grades g
+    JOIN users u ON u.userId = g.studentId
+    JOIN users tu ON tu.userId = g.teacherId
+    JOIN departments d ON d.departmentId = g.departmentId
+    JOIN subjects s ON s.subjectId = g.subjectId
+    JOIN schoolYears sy ON sy.schoolYearId = g.schoolYearId
+    WHERE g.teacherId = ? AND g.departmentId = ? AND g.yearLevel = ? AND g.subjectId = ? AND g.schoolYearId = ?`;
+    const params = [
+      teacherId,
+      departmentId,
+      yearLevel,
+      subjectId,
+      schoolYearId,
+    ];
+    return await sqlQuery(query, params);
   },
 
   submitGrades: async ({

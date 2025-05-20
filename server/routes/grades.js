@@ -12,6 +12,7 @@ router.post("/excelgrades/approve", tryCatch(handler.approveExcelGrade));
 router.post("/add", tryCatch(handler.addGrade));
 router.get("/all", tryCatch(handler.getAllGrades));
 router.get("/student", tryCatch(handler.getGradesByStudent));
+router.get("/department", tryCatch(handler.getGradesByDepartment));
 router.get("/pending", tryCatch(handler.getAllPendingGrades));
 router.post("/approve", tryCatch(handler.approveGrades));
 router.post("/submit", tryCatch(handler.submitGrades));

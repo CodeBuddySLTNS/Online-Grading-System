@@ -148,6 +148,7 @@ const getAllPendingGrades = async (req, res) => {
         departmentShort: grade.departmentShort,
         yearLevel: grade.yearLevel,
         subjectId: grade.subjectId,
+        subjectCode: grade.code,
         subjectName: grade.subjectName,
         schoolYearId: grade.schoolYearId,
         semester: grade.semester,
@@ -197,6 +198,11 @@ const getGradesByStudent = async (req, res) => {
   res.send(result);
 };
 
+const getGradesByDepartment = async (req, res) => {
+  const result = await Grades.getGradesByDepartment(req.query);
+  res.send(result);
+};
+
 const approveGrades = async (req, res) => {
   const result = await Grades.approveGrades(req.body);
   res.send(result);
@@ -217,6 +223,7 @@ module.exports = {
   getAllGrades,
   getAllPendingGrades,
   getGradesByStudent,
+  getGradesByDepartment,
   getGradeById,
   approveGrades,
   submitGrades,
