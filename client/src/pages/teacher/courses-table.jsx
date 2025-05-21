@@ -41,17 +41,17 @@ export function CourseTable({
     <div className="w-full flex flex-col justify-center items-center">
       <NavigateBack />
       <Card
-        className="w-full px-4 max-w-5xl shadow-lg rounded-2xl gap-4"
+        className="w-full px-4 max-w-5xl shadow-lg rounded-2xl gap-3.5"
         style={{ backgroundColor: "rgba(255,255,255,0.75)" }}
       >
-        <CardHeader className="flex items-center gap-2 px-4 sm:px-6">
-          <BookOpen className="w-5 h-5 text-primary" />
-          <CardTitle className="w-full flex justify-between">
+        <CardHeader className="flex items-center justify-between flex-wrap gap-2 px-4 sm:px-6">
+          <CardTitle className="flex justify-center items-center gap-1.5">
+            <BookOpen className="w-5 h-5 text-primary" />
             <div className="text-lg sm:text-xl">
               Course List ({department}-{year})
             </div>
-            <HandleNewSubject departmentId={departmentId} year={year} sy={sy} />
           </CardTitle>
+          <HandleNewSubject departmentId={departmentId} year={year} sy={sy} />
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-x-auto">

@@ -56,7 +56,12 @@ const StudentRecords = () => {
                       }))
                     }
                   >
-                    {dept.departmentName} ({dept.shortName})
+                    <span className="hidden md:block">
+                      {dept.departmentName} ({dept.shortName})
+                    </span>
+                    <span className="block md:hidden truncate">
+                      {dept.shortName} - {dept.departmentName}
+                    </span>
                   </Button>
                 ))
               ) : departments && !depyear.year ? (

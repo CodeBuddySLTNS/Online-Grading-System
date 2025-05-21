@@ -94,7 +94,10 @@ export default function HandleNewSubject({ departmentId, year, sy }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="secondary" className="shadow hover:shadow-md">
+        <Button
+          variant="secondary"
+          className="w-full md:w-auto shadow hover:shadow-md"
+        >
           Handle new course
         </Button>
       </DialogTrigger>

@@ -33,13 +33,17 @@ const addTeacherDepartment = async (req, res) => {
     yearLevel,
     schoolYearId
   );
-  await Teacher.addTeacherDepartmentSubject(
-    teacherId,
-    departmentId,
-    yearLevel,
-    subjectId,
-    schoolYearId
-  );
+
+  if (subjectId) {
+    await Teacher.addTeacherDepartmentSubject(
+      teacherId,
+      departmentId,
+      yearLevel,
+      subjectId,
+      schoolYearId
+    );
+  }
+
   res.send({ message: "Success!" });
 };
 

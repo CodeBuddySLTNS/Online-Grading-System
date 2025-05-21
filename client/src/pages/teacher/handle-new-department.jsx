@@ -56,7 +56,7 @@ export default function TeacherDepartmentSelector() {
     mutationFn: coleAPI(`/teachers/teacher/newdepartment`, "POST"),
     onSuccess: () => {
       toast("Success!", {
-        description: "Department Subject has been successfully handled.",
+        description: "Department has been successfully handled.",
         style: {
           fontSize: "1rem",
           backgroundColor: "#d4edda",
@@ -96,7 +96,7 @@ export default function TeacherDepartmentSelector() {
   });
 
   const onSubmit = async (data) => {
-    if (!data.department || !data.year || !data.subjectId) {
+    if (!data.department || !data.year) {
       alert("Please select department, year level, and course.");
       return;
     }
@@ -105,7 +105,7 @@ export default function TeacherDepartmentSelector() {
       teacherId: user.userId,
       departmentId: Number(data.department),
       yearLevel: Number(data.year),
-      subjectId: Number(data.subjectId),
+      subjectId: data.subjectId ? Number(data.subjectId) : null,
       schoolYearId: Number(sy),
     };
 

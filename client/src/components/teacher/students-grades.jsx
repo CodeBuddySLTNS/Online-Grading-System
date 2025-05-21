@@ -176,7 +176,7 @@ const StudentsGrades = ({
         className="w-full max-w-5xl shadow-lg rounded-2xl gap-4"
         style={{ backgroundColor: "rgba(255,255,255,0.75)" }}
       >
-        <CardHeader className="flex justify-between">
+        <CardHeader className="flex justify-between flex-wrap">
           <div className="flex items-center gap-2">
             <User className="w-6 h-6 text-primary" />
             <div>
@@ -189,7 +189,11 @@ const StudentsGrades = ({
               </p>
             </div>
           </div>
-          <Button disabled={submitted} onClick={handleSubmitGrades}>
+          <Button
+            className="w-full md:w-auto"
+            disabled={submitted}
+            onClick={handleSubmitGrades}
+          >
             Submit Grades
           </Button>
         </CardHeader>
@@ -221,7 +225,7 @@ const StudentsGrades = ({
                         {edit.studentId === student.studentId ? (
                           <Input
                             value={edit[term] || ""}
-                            className="w-full disabled:text-black disabled:opacity-100"
+                            className="w-12 md:w-full disabled:text-black disabled:opacity-100"
                             type="number"
                             min={1}
                             max={5}
